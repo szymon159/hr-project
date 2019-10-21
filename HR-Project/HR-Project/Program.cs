@@ -15,6 +15,7 @@ namespace HR_Project
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();
+            Console.WriteLine("VS TEST");
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
