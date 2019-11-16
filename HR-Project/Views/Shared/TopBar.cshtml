@@ -1,0 +1,13 @@
+﻿<div class="topbar">
+    <div class="topbar-logo-area">
+        @Html.ActionLink("", "Index", "JobOffer", null, new { @class = "topbar-logo" })
+    </div>
+    <div class="topbar-buttons-area">
+        @Html.ActionLink("Job Offers", "Index", "JobOffer", null, new { @class = "topbar-button job-offers-icon" })
+        @Html.ActionLink("My applications", "Index", "Application", null, new { @class = "topbar-button application-icon" })
+        @Html.ActionLink("Manage users", "Index", "UserManagement", null, new { @class = "topbar-button users-icon" })
+    </div>
+    <div class="topbar-user-area">
+        @Html.ActionLink("Manage users", "Index", "UserManagement", null, new { @class = "topbar-button topbar-user-button user-icon" })
+    </div>
+</div>
