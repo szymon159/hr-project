@@ -1,0 +1,31 @@
+﻿@model HR_Project.ViewModels.JobOfferViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Details";
+}
+
+<body>
+    <h1> Job offer details: </h1>
+
+    <div class="list-item">
+        <div class="list-item-primary">
+            <h2 class="list-item-title"> @Html.DisplayFor(modelItem => Model.JobTitle) </h2>
+        </div>
+        <div class="list-item-tertiary">
+            <button>Edit offer</button>
+            <button>Delete offer</button>
+        </div>
+    </div>
+    <div class="list-item-description">
+        Lorem Ipsum
+    </div>
+    <div class="list-item list-item-footer">
+        <div class="list-item-secondary">
+            @Html.ActionLink("Back", "Index", "JobOffer", null, new { @class = "btn button" })
+        </div>
+        <div class="list-item-tertiary">
+            <button>Edit offer</button>
+            <button>Delete offer</button>
+        </div>
+    </div>
+</body>
