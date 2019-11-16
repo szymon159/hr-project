@@ -12,6 +12,23 @@ namespace HR_Project.Controllers
         private static List<JobOfferViewModel> jobOffers = new List<JobOfferViewModel>
         {
             new JobOfferViewModel{Id = 1, JobTitle = "BackendDeveloper"},
+            new JobOfferViewModel{Id = 1, JobTitle = "BackendDeveloper"},
+            new JobOfferViewModel{Id = 1, JobTitle = "BackendDeveloper"},
+            new JobOfferViewModel{Id = 1, JobTitle = "BackendDeveloper"},
+            new JobOfferViewModel{Id = 1, JobTitle = "BackendDeveloper"},
+            new JobOfferViewModel{Id = 1, JobTitle = "BackendDeveloper"},
+            new JobOfferViewModel{Id = 1, JobTitle = "BackendDeveloper"},
+            new JobOfferViewModel{Id = 1, JobTitle = "BackendDeveloper"},
+            new JobOfferViewModel{Id = 1, JobTitle = "BackendDeveloper"},
+            new JobOfferViewModel{Id = 1, JobTitle = "BackendDeveloper"},
+            new JobOfferViewModel{Id = 1, JobTitle = "BackendDeveloper"},
+            new JobOfferViewModel{Id = 1, JobTitle = "BackendDeveloper"},
+            new JobOfferViewModel{Id = 1, JobTitle = "BackendDeveloper"},
+            new JobOfferViewModel{Id = 1, JobTitle = "BackendDeveloper"},
+            new JobOfferViewModel{Id = 1, JobTitle = "BackendDeveloper"},
+            new JobOfferViewModel{Id = 1, JobTitle = "BackendDeveloper"},
+            new JobOfferViewModel{Id = 1, JobTitle = "BackendDeveloper"},
+            new JobOfferViewModel{Id = 1, JobTitle = "BackendDeveloper"},
         };
 
         public IActionResult Index()

@@ -1,6 +1,49 @@
-﻿
-h1 {
+﻿body {
+    background-color: #ebebeb;
     font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
     font-size: 3em;
     text-align: center;
+}
+
+.list-item {
+    display: flex;
+    background-color: white;
+    border: solid;
+    border-width: 1px;
+    min-height: 60px;
+    align-items: center;
+    margin: 1em 7em;
+    padding: 0.5em 1em;
+}
+
+.list-item-primary {
+    display: flex;
+    flex-grow: 1;
+}
+
+.list-item-secondary {
+    padding: 0em 1em;
+    min-width: 140px;
+}
+
+.list-item-tertiary {
+    min-width: 160px;
+}
+
+.list-item-title {
+    max-width: 60%;
+    margin: 0 1em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+button {
+    border: solid;
+    border-width: 1px;
+    border-radius: 4px;
+    min-height: 2em;
 }
