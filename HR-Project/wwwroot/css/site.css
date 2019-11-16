@@ -4,6 +4,87 @@
     padding: 1em;
 }
 
+.topbar {
+    height: 100px;
+    background-color: #55765d;
+    margin: -1em;
+    margin-bottom: 1em;
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+}
+
+.topbar-logo-area {
+    padding: 10px;
+    height: 100%;
+    width: 100px;
+}
+
+.topbar-logo {
+    content: url(../HR-Logo.png);
+    width: 80px;
+    height: 80px;
+}
+
+.topbar-buttons-area {
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-evenly;
+    height: 60px;
+}
+
+.topbar-user-area {
+    padding: 10px;
+    height: 100%;
+    width: 30%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.topbar-button {
+    display: flex;
+    font-size: 24px;
+    color: black;
+    align-items: center;
+}
+
+.topbar-user-button {
+    height: 80px;
+    font-size: 30px;
+}
+
+.topbar-button:visited,
+.topbar-button:active,
+.topbar-button:hover {
+    color: black;
+    text-decoration: none;
+}
+
+.job-offers-icon::before {
+    content: url(../job-offers.png);
+    padding: 0px 5px;
+    margin-top: 6px;
+}
+
+.application-icon::before {
+    content: url(../applications.png);
+    padding: 0px 5px;
+    margin-top: 6px;
+}
+
+.users-icon::before {
+    content: url(../manage-users.png);
+    padding: 0px 5px;
+    margin-top: 6px;
+}
+
+.user-icon::before {
+    content: url(../user.png);
+    padding: 0px 5px;
+    margin-top: 6px;
+}
+
 h1 {
     font-size: 3em;
     text-align: center;
