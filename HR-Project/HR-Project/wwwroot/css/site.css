@@ -1,11 +1,13 @@
 ﻿body {
     background-color: #ebebeb;
     font-family: Arial, Helvetica, sans-serif;
+    padding: 1em;
 }
 
 h1 {
     font-size: 3em;
     text-align: center;
+    min-width: 700px;
 }
 
 .list-item {
@@ -15,8 +17,9 @@ h1 {
     border-width: 1px;
     min-height: 60px;
     align-items: center;
-    margin: 1em 7em;
+    margin: 1em 6em;
     padding: 0.5em 1em;
+    min-width: 700px;
 }
 
 .list-item-primary {
