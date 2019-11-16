@@ -1,3 +1,8 @@
 ﻿@model IEnumerable<HR_Project.ViewModels.JobOfferViewModel>
+@{
+    Layout = "~/Views/_Layout.cshtml";
+}
 
-@Html.Partial("JobOfferView", Model)
+<body>
+    @Html.Partial("JobOfferView", Model)
+</body>
