@@ -1,0 +1,29 @@
+﻿@model IEnumerable<HR_Project.ViewModels.JobOfferViewModel>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Job Offers";
+}
+
+<body>
+    <h1> Job offers: </h1>
+
+    @foreach (var item in Model)
+    {
+        <div class="list-item">
+            <div class="list-item-primary">
+                <h2 class="list-item-title"> @Html.DisplayFor(modelItem => item.JobTitle) </h2>
+                @Html.ActionLink("View Details", "Details", "JobOffer", null, new { @class = "btn button" })
+            </div>
+            <div class="list-item-secondary">
+                <button>View application</button>
+            </div>
+            <div class="list-item-tertiary">
+                <button>Edit offer</button>
+                <button>Delete offer</button>
+            </div>
+        </div>
+    }
+</body>
+
+
+@*@Html.Partial("JobOfferView", Model)*@
