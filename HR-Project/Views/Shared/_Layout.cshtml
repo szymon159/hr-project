@@ -19,6 +19,7 @@
 <body>
     <partial name="_CookieConsentPartial" />
     @Html.Partial("TopBar")
+    @Html.Partial("SearchBar", new HR_Project.ViewModels.SearchViewModel(ViewData["Title"]))
 
     <div class="container body-content">
         @RenderBody()
