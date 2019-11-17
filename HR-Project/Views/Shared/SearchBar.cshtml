@@ -1,0 +1,10 @@
+﻿@model HR_Project.ViewModels.SearchViewModel
+
+<div class="searchbar">
+    <div class="searchbar-button-area">
+        @Html.ActionLink("Back", "Index", "JobOffer", null, new { @class = "searchbar-button searchbar-button-back" })
+    </div>
+    <div class="searchbar-input-area">
+        @Html.TextBoxFor(modelItem => Model.SearchString, new { @placeholder = "Search for " + Model.ComponentTitle, @class = "searchbar-input" })
+    </div>
+</div>

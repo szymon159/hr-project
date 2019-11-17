@@ -85,6 +85,52 @@
     margin-top: 6px;
 }
 
+.searchbar {
+    height: 70px;
+    background-color: #f7f6f6;
+    margin: -1em;
+    margin-bottom: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+}
+
+.searchbar-button:visited,
+.searchbar-button:active,
+.searchbar-button:hover {
+    color: black;
+    text-decoration: none;
+}
+
+.searchbar-button-back {
+    display: flex;
+    font-size: 16px;
+    color: black;
+    align-items: center;
+}
+
+.searchbar-button-back::before {
+    content: url(../keyboard_arrow_left_black_48x48.png);
+    margin-top: 3px;
+}
+
+.searchbar-input-area {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+}
+
+.searchbar-input {
+    width: 50%;
+}
+
+.searchbar-input-area::after {
+    content: url(../search-24px.svg);
+    margin-top: 3px;
+    margin-left: -30px;
+}
+
 h1 {
     font-size: 3em;
     text-align: center;
