@@ -26,6 +26,12 @@ namespace HR_Project.Controllers.Application
 
         public IActionResult Delete(int id)
         {
+            var toDelete = applications.Where(offer => offer.Id == id);
+            if (toDelete.Count() == 1)
+            {
+                toDelete.First().Status = ApplicationStatus.Withdrawn;
+            }
+
             return RedirectToAction("Index", "Application");
         }
 
