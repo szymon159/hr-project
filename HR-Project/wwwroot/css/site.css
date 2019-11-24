@@ -1,15 +1,31 @@
-﻿body {
-    background-color: #ebebeb;
+﻿:root {
+    --top-bar-background-color: #55765d;
+    --grey-background-color: #ebebeb;
+    --light-grey-background-color: #f7f6f6;
+    --light-grey-button-color: #e6e6e6;
+    --light-green-button-color: #92d36e;
+    --light-red-button-color: #ff5d55;
+    --dark-red-button-color: #e61610;
+    --lighter-black-text-color: #232323;
+    --darker-grey-text-color: #444444;
+    --green-text-color: #629c44;
+    --red-text-color: #e61610;
+    --button-border-color: #939393;
+}
+
+
+body {
+    background-color: var(--grey-background-color);
     font-family: Arial, Helvetica, sans-serif;
     padding: 1em;
 }
 
 .topbar {
     height: 100px;
-    background-color: #55765d;
+    background-color: var(--top-bar-background-color);
     margin: -1em;
     margin-bottom: 1em;
-    display:flex;
+    display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 10px;
@@ -87,7 +103,7 @@
 
 .searchbar {
     height: 70px;
-    background-color: #f7f6f6;
+    background-color: var(--light-grey-background-color);
     margin: -1em;
     margin-bottom: 1em;
     display: flex;
@@ -156,6 +172,7 @@ h1 {
 .list-item-primary {
     display: flex;
     flex-grow: 1;
+    align-items: center;
 }
 
 .list-item-secondary {
@@ -175,11 +192,71 @@ h1 {
     text-overflow: ellipsis;
 }
 
+.list-item-title-main {
+    margin: unset;
+}
+
+.list-item-title-details {
+    margin: unset;
+}
+
+.joboffer-status,
+.application-status {
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.joboffer-status-active,
+.application-status-approved {
+    color: var(--green-text-color);
+}
+
+.joboffer-status-inactive,
+.application-status-rejected,
+.application-status-withdrawn {
+    color: var(--red-text-color);
+}
+
+.application-details {
+    background-color: var(--light-grey-background-color);
+    flex-grow: 1;
+    margin: 1em;
+    border: 1px;
+    border-style: solid;
+    border-color: var(--button-border-color);
+}
+
+.application-property {
+    margin: 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.application-property-label {
+    flex-grow: 1;
+    font-weight: bold;
+}
+
+.application-property-edit {
+    width: 90%
+}
+
+.application-property-textarea {
+    resize: vertical;
+}
+
 .list-item-description {
     min-height: 400px;
     margin: -1em 6em 1em 6em;
-    padding-top: 1.5em;
-    padding-bottom: 1.5em;
+    padding: 5px 0px 5px 5px;
+}
+
+.description {
+    resize: none;
+    border: none;
+    padding: unset;
+    flex-grow: 1;
 }
 
 .list-item-footer {
@@ -191,8 +268,20 @@ h1 {
     border: solid;
     border-width: 1px;
     border-radius: 4px;
-    border-color: #939393;
-    min-height: 2em;
-    background-color: #e6e6e6;
+    border-color: var(--button-border-color);
+    height: 2.5em;
+    background-color: var(--light-grey-button-color);
     color: black;
+}
+
+.button-back {
+    margin-right: 1em;
+}
+
+.lightred {
+    background-color: var(--light-red-button-color);
+}
+
+.lightgreen {
+    background-color: var(--light-green-button-color);
 }
