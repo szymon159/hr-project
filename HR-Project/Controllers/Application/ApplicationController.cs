@@ -42,6 +42,11 @@ namespace HR_Project.Controllers.Application
 
         public IActionResult Apply(int id)
         {
+            var application = applications.Where(item => item.Id == id).FirstOrDefault();
+
+            if(application.Status == ApplicationStatus.Undefined)
+                application.Status = ApplicationStatus.Submitted;
+
             return RedirectToAction("Index", "Application");
         }
 
