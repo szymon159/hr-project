@@ -19,6 +19,11 @@ namespace HR_Project.Controllers
             new JobOfferViewModel{Id = 5, JobTitle = "Cook", Description = "Finally some good funny person"}
         };
 
+        public IActionResult Index()
+        {
+            return View(jobOffers);
+        }
+
         public IActionResult Delete(int id)
         {
             var toDelete = jobOffers.Where(offer => offer.Id == id);
