@@ -30,14 +30,24 @@ namespace HR_Project.Controllers
             return RedirectToAction("Index", "JobOffer");
         }
 
-        public IActionResult Index()
+        public IActionResult Details(int id, bool isEditing)
         {
-            return View(jobOffers);
+            var model = new JobOfferDetailsViewModel
+            {
+                JobOfferModel = jobOffers.Where(offer => offer.Id == id).FirstOrDefault(),
+                IsEditing = isEditing
+            };
+            return View(model);
         }
 
-        public IActionResult Details(int id)
+        [HttpPost]
+        public IActionResult Save(int id, JobOfferDetailsViewModel model)
         {
-            return View(jobOffers[id]);
+            var oldmodel = jobOffers.Where(offer => offer.Id == id).FirstOrDefault();
+            if (oldmodel != null)
+                oldmodel.Description = model.JobOfferModel.Description;
+
+            return RedirectToAction("Details", new { id = id, isEditing = true });
         }
     }
 }
