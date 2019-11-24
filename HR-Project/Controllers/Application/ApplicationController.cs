@@ -48,7 +48,24 @@ namespace HR_Project.Controllers.Application
         [HttpPost]
         public IActionResult Save(int id, ApplicationDetailsViewModel model)
         {
-            return RedirectToAction("Details", new { id = id, isEditing = true });
+            var oldModel = applications.Where(application => application.Id == id).FirstOrDefault();
+            ApplicationViewModel newModel = new ApplicationViewModel();
+            if (oldModel != null)
+            {
+                newModel = model.ApplicationModel;
+                newModel.Status = ApplicationStatus.Undefined;
+                newModel.JobTitle = oldModel.JobTitle;
+                newModel.Id = oldModel.Id;
+
+                if(oldModel.Status != ApplicationStatus.Undefined)
+                {
+                    oldModel.Status = ApplicationStatus.Withdrawn;
+                    newModel.Id *= 10; //temporary
+                    applications.Add(newModel);
+                }
+            }
+
+            return RedirectToAction("Details", new { id = newModel.Id, isEditing = true });
         }
     }
 }
