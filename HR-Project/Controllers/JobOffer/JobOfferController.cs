@@ -2,34 +2,37 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HR_Project.Enums;
+using HR_Project.DataLayer;
 using HR_Project.ViewModels;
+using HR_Project_Database.EntityFramework;
+using HR_Project_Database.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HR_Project.Controllers
 {
     public class JobOfferController : Controller
     {
-        private static List<JobOfferViewModel> jobOffers = new List<JobOfferViewModel>
+        private readonly HR_ProjectContext context;
+        private static List<JobOfferViewModel> jobOffers;
+
+        public JobOfferController(HR_ProjectContext context)
         {
-            new JobOfferViewModel{Id = 1, JobTitle = "Backend Developer", Description = "Backend Developer with id = 1 and experience in creating bugs"},
-            new JobOfferViewModel{Id = 2, JobTitle = "Frontend Developer", Description = "Frontend Developer with id = 2 and experience in creating requirements for nice-looking things which are unable to implement"},
-            new JobOfferViewModel{Id = 3, JobTitle = "Manager", Description = "Manager with id = 3 and experience in managing things (doesn't really matter what kind of things)"},
-            new JobOfferViewModel{Id = 4, JobTitle = "Teacher", Description = "Teacher with id = 4 who is ready to earn less than he should for his skills"},
-            new JobOfferViewModel{Id = 5, JobTitle = "Cook", Description = "Finally some good funny person"}
-        };
+            this.context = context;
+            jobOffers = DatabaseReader.GetJobOffers(context);
+        }
 
         public IActionResult Index()
         {
             return View(jobOffers);
         }
 
-        public IActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var toDelete = jobOffers.Where(offer => offer.Id == id);
+            var toDelete = context.JobOffer.Where(offer => offer.IdJobOffer == id);
             if(toDelete.Count() == 1)
             {
                 toDelete.First().Status = JobOfferStatus.Inactive;
+                await context.SaveChangesAsync();
             }
 
             return RedirectToAction("Index", "JobOffer");
@@ -37,20 +40,27 @@ namespace HR_Project.Controllers
 
         public IActionResult Details(int id, bool isEditing)
         {
+            var baseModel = jobOffers.Where(offer => offer.Id == id).FirstOrDefault();
+            if (baseModel.Description == null)
+                baseModel.Description = DatabaseReader.GetJobOfferDescription(context, id);
+
             var model = new JobOfferDetailsViewModel
             {
-                JobOfferModel = jobOffers.Where(offer => offer.Id == id).FirstOrDefault(),
+                JobOfferModel = baseModel,
                 IsEditing = isEditing
             };
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult Save(int id, JobOfferDetailsViewModel model)
+        public async Task<ActionResult> Save(int id, JobOfferDetailsViewModel model)
         {
-            var oldmodel = jobOffers.Where(offer => offer.Id == id).FirstOrDefault();
-            if (oldmodel != null)
-                oldmodel.Description = model.JobOfferModel.Description;
+            var toUpdate = context.JobOffer.Where(offer => offer.IdJobOffer == id).FirstOrDefault();
+            if (toUpdate != null)
+            {
+                toUpdate.Description = model.JobOfferModel.Description;
+                await context.SaveChangesAsync();
+            }
 
             return RedirectToAction("Details", new { id = id, isEditing = true });
         }

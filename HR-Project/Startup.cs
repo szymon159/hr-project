@@ -42,14 +42,15 @@ namespace HR_Project
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetRequiredService<HR_ProjectContext>();
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
-                context.InitializeFakeData();
-                context.SaveChanges();
-            }
+            //// Following lines recreate whole DB with fake data
+            //using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            //{
+            //    var context = serviceScope.ServiceProvider.GetRequiredService<HR_ProjectContext>();
+            //    context.Database.EnsureDeleted();
+            //    context.Database.EnsureCreated();
+            //    context.InitializeFakeData();
+            //    context.SaveChanges();
+            //}
 
             if (env.IsDevelopment())
             {
