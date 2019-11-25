@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HR_ProjectDB.Models
+namespace HR_Project_Database.Models
 {
     public partial class Application
     {

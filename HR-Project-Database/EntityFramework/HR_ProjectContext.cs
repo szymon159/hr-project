@@ -1,9 +1,9 @@
 ﻿using System;
-using HR_ProjectDB.Models;
+using HR_Project_Database.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace HR_ProjectDB.EntityFramework
+namespace HR_Project_Database.EntityFramework
 {
     public partial class HR_ProjectContext : DbContext
     {

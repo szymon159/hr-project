@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace HR_ProjectDB.Migrations
+namespace HR_Project_Database.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class InitialMigrationNew : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -18,19 +18,6 @@ namespace HR_ProjectDB.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ApplicationMessage", x => x.Id_ApplicationMessage);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ApplicationStatus",
-                columns: table => new
-                {
-                    Id_ApplicationStatus = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Status = table.Column<string>(unicode: false, maxLength: 15, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ApplicationStatus", x => x.Id_ApplicationStatus);
                 });
 
             migrationBuilder.CreateTable(
@@ -59,29 +46,20 @@ namespace HR_ProjectDB.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "JobOfferStatus",
+                name: "User",
                 columns: table => new
                 {
-                    Id_JobOfferStatus = table.Column<int>(nullable: false)
+                    Id_User = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Status = table.Column<string>(unicode: false, maxLength: 15, nullable: false)
+                    FirstName = table.Column<string>(unicode: false, maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(unicode: false, maxLength: 50, nullable: false),
+                    Email = table.Column<string>(unicode: false, maxLength: 50, nullable: false),
+                    Role = table.Column<int>(nullable: false),
+                    UserProfileId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_JobOfferStatus", x => x.Id_JobOfferStatus);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserRole",
-                columns: table => new
-                {
-                    Id_UserRole = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Role = table.Column<string>(unicode: false, maxLength: 15, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserRole", x => x.Id_UserRole);
+                    table.PrimaryKey("PK_User", x => x.Id_User);
                 });
 
             migrationBuilder.CreateTable(
@@ -112,7 +90,7 @@ namespace HR_ProjectDB.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     JobTitle = table.Column<string>(unicode: false, maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    JobOfferStatusId = table.Column<int>(nullable: false),
+                    Status = table.Column<int>(nullable: false),
                     AttachmentGroupId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -123,35 +101,6 @@ namespace HR_ProjectDB.Migrations
                         column: x => x.AttachmentGroupId,
                         principalTable: "AttachmentGroup",
                         principalColumn: "Id_AttachmentGroup",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_JobOffer_JobOfferStatus",
-                        column: x => x.JobOfferStatusId,
-                        principalTable: "JobOfferStatus",
-                        principalColumn: "Id_JobOfferStatus",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "User",
-                columns: table => new
-                {
-                    Id_User = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    FirstName = table.Column<string>(unicode: false, maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(unicode: false, maxLength: 50, nullable: false),
-                    Email = table.Column<string>(unicode: false, maxLength: 50, nullable: false),
-                    RoleId = table.Column<int>(nullable: false),
-                    UserProfileId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User", x => x.Id_User);
-                    table.ForeignKey(
-                        name: "FK_User_UserRole",
-                        column: x => x.RoleId,
-                        principalTable: "UserRole",
-                        principalColumn: "Id_UserRole",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -166,7 +115,7 @@ namespace HR_ProjectDB.Migrations
                     CVId = table.Column<int>(nullable: false),
                     AttachmentGroupId = table.Column<int>(nullable: true),
                     ApplicationMessageId = table.Column<int>(nullable: true),
-                    ApplicationStatusId = table.Column<int>(nullable: false)
+                    Status = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -176,12 +125,6 @@ namespace HR_ProjectDB.Migrations
                         column: x => x.ApplicationMessageId,
                         principalTable: "ApplicationMessage",
                         principalColumn: "Id_ApplicationMessage",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Application_ApplicationStatus",
-                        column: x => x.ApplicationStatusId,
-                        principalTable: "ApplicationStatus",
-                        principalColumn: "Id_ApplicationStatus",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Application_AttachmentGroup",
@@ -241,11 +184,6 @@ namespace HR_ProjectDB.Migrations
                 column: "ApplicationMessageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Application_ApplicationStatusId",
-                table: "Application",
-                column: "ApplicationStatusId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Application_AttachmentGroupId",
                 table: "Application",
                 column: "AttachmentGroupId");
@@ -276,11 +214,6 @@ namespace HR_ProjectDB.Migrations
                 column: "AttachmentGroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_JobOffer_JobOfferStatusId",
-                table: "JobOffer",
-                column: "JobOfferStatusId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Responsibility_JobOfferId",
                 table: "Responsibility",
                 column: "JobOfferId");
@@ -289,11 +222,6 @@ namespace HR_ProjectDB.Migrations
                 name: "IX_Responsibility_UserId",
                 table: "Responsibility",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_RoleId",
-                table: "User",
-                column: "RoleId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -311,9 +239,6 @@ namespace HR_ProjectDB.Migrations
                 name: "ApplicationMessage");
 
             migrationBuilder.DropTable(
-                name: "ApplicationStatus");
-
-            migrationBuilder.DropTable(
                 name: "CV");
 
             migrationBuilder.DropTable(
@@ -324,12 +249,6 @@ namespace HR_ProjectDB.Migrations
 
             migrationBuilder.DropTable(
                 name: "AttachmentGroup");
-
-            migrationBuilder.DropTable(
-                name: "JobOfferStatus");
-
-            migrationBuilder.DropTable(
-                name: "UserRole");
         }
     }
 }

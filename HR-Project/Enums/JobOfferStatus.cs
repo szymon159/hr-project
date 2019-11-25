@@ -8,6 +8,7 @@ namespace HR_Project.Enums
     public enum JobOfferStatus
     {
         Active,
-        Inactive
+        Inactive,
+        Error
     }
 }
