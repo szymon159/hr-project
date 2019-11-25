@@ -12,10 +12,10 @@ namespace HR_Project.Controllers
 {
     public class JobOfferController : Controller
     {
-        private readonly HR_ProjectContext context;
+        private readonly DataContext context;
         private static List<JobOfferViewModel> jobOffers;
 
-        public JobOfferController(HR_ProjectContext context)
+        public JobOfferController(DataContext context)
         {
             this.context = context;
             jobOffers = DatabaseReader.GetJobOffers(context);

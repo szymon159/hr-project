@@ -35,7 +35,7 @@ namespace HR_Project
 
             var dbConnectionString = Configuration["DatabaseConnectionString"];
 
-            services.AddDbContext<HR_ProjectContext>(options => options.UseSqlServer(dbConnectionString));
+            services.AddDbContext<DataContext>(options => options.UseSqlServer(dbConnectionString));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 

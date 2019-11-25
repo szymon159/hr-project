@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HR_Project_Database.Migrations
 {
-    [DbContext(typeof(HR_ProjectContext))]
+    [DbContext(typeof(DataContext))]
     [Migration("20191125220151_InitialMigration")]
     partial class InitialMigration
     {

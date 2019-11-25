@@ -4,20 +4,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using HR_Project.Enums;
 using HR_Project.ViewModels;
+using HR_Project_Database.EntityFramework;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HR_Project.Controllers.Application
 {
     public class ApplicationController : Controller
     {
-         private static List<ApplicationViewModel> applications = new List<ApplicationViewModel>
-         { 
-            new ApplicationViewModel{Id = 1, JobTitle = "Backend Developer", Status=ApplicationStatus.Approved},
-            new ApplicationViewModel{Id = 2, JobTitle = "Frontend Developer", Status=ApplicationStatus.Rejected},
-            new ApplicationViewModel{Id = 3, JobTitle = "Manager", Status=ApplicationStatus.Submitted},
-            new ApplicationViewModel{Id = 4, JobTitle = "Teacher", Status=ApplicationStatus.Submitted},
-            new ApplicationViewModel{Id = 5, JobTitle = "Cook", Status=ApplicationStatus.Submitted}
-        };
+        private readonly DataContext context;
+        private static List<ApplicationViewModel> applications;
+        
+        public ApplicationController(DataContext context)
+        {
+            this.context = context;
+            
+        }
 
         public IActionResult Index()
         {

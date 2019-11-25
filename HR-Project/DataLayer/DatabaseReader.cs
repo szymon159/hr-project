@@ -10,7 +10,7 @@ namespace HR_Project.DataLayer
 {
     public static class DatabaseReader
     {
-        public static List<JobOfferViewModel> GetJobOffers(HR_ProjectContext context, bool includeDescription = false)
+        public static List<JobOfferViewModel> GetJobOffers(DataContext context, bool includeDescription = false)
         {
             var result = new List<JobOfferViewModel>();
             Parallel.ForEach(context.JobOffer, joboffer =>
@@ -27,7 +27,7 @@ namespace HR_Project.DataLayer
             return result;
         }
 
-        public static string GetJobOfferDescription(HR_ProjectContext context, int jobOfferId)
+        public static string GetJobOfferDescription(DataContext context, int jobOfferId)
         {
             return context.JobOffer.Where(jobOffer => jobOffer.IdJobOffer == jobOfferId).FirstOrDefault().Description;
         }
