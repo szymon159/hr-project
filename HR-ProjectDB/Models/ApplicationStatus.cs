@@ -1,4 +1,7 @@
-﻿namespace HR_Project.Enums
+﻿using System;
+using System.Collections.Generic;
+
+namespace HR_ProjectDB.Models
 {
     public enum ApplicationStatus
     {
@@ -6,7 +9,6 @@
         Submitted,
         Approved,
         Rejected,
-        Withdrawn,
-        Error
+        Withdrawn
     }
 }

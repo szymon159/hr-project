@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace HR_Project.Enums
+namespace HR_ProjectDB.Models
 {
     public enum JobOfferStatus
     {
         Active,
-        Inactive,
-        Error
+        Inactive
     }
 }
