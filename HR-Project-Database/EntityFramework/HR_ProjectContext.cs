@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace HR_Project_Database.EntityFramework
 {
-    public partial class HR_ProjectContext : DbContext
+    public partial class DataContext : DbContext
     {
-        public HR_ProjectContext()
+        public DataContext()
         {
         }
 
-        public HR_ProjectContext(DbContextOptions<HR_ProjectContext> options)
+        public DataContext(DbContextOptions<DataContext> options)
             : base(options)
         {
         }

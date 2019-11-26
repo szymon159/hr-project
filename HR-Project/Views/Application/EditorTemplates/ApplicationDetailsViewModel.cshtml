@@ -2,38 +2,17 @@
 
 <div class="application-property">
     <p class="application-property-label">First name:</p>
-    @if (Model.IsEditing == true)
-    {
-        @Html.TextBoxFor(modelItem => Model.ApplicationModel.FirstName, new { @placeholder = "First name", @class = "application-property-edit" })
-    }
-    else
-    {
-        @Html.TextBoxFor(modelItem => Model.ApplicationModel.FirstName, new { @readonly = "true", @placeholder = "First name", @class = "application-property-edit" })
-    }
+    @Html.TextBoxFor(modelItem => Model.ApplicationModel.FirstName, new { @readonly = "true", @placeholder = "First name", @class = "application-property-edit" })
 </div>
 
 <div class="application-property">
     <p class="application-property-label">Last name:</p>
-    @if (Model.IsEditing == true)
-    {
-        @Html.TextBoxFor(modelItem => Model.ApplicationModel.LastName, new { @placeholder = "Last name", @class = "application-property-edit" })
-    }
-    else
-    {
-        @Html.TextBoxFor(modelItem => Model.ApplicationModel.LastName, new { @readonly = "true", @placeholder = "Last name", @class = "application-property-edit" })
-    }
+    @Html.TextBoxFor(modelItem => Model.ApplicationModel.LastName, new { @readonly = "true", @placeholder = "Last name", @class = "application-property-edit" })
 </div>
 
 <div class="application-property">
     <p class="application-property-label">Email address:</p>
-    @if (Model.IsEditing == true)
-    {
-        @Html.TextBoxFor(modelItem => Model.ApplicationModel.Email, new { @placeholder = "Email address", @class = "application-property-edit" })
-    }
-    else
-    {
-        @Html.TextBoxFor(modelItem => Model.ApplicationModel.Email, new { @readonly = "true", @placeholder = "Email address", @class = "application-property-edit" })
-    }
+    @Html.TextBoxFor(modelItem => Model.ApplicationModel.Email, new { @readonly = "true", @placeholder = "Email address", @class = "application-property-edit" })
 </div>
 
 <div class="application-property">
