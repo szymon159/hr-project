@@ -45,12 +45,13 @@ namespace HR_Project
             //// Following lines recreate whole DB with fake data
             //using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             //{
-            //    var context = serviceScope.ServiceProvider.GetRequiredService<HR_ProjectContext>();
+            //    var context = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
             //    context.Database.EnsureDeleted();
             //    context.Database.EnsureCreated();
             //    context.InitializeFakeData();
             //    context.SaveChanges();
             //}
+            ////
 
             if (env.IsDevelopment())
             {

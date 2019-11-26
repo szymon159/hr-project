@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HR_Project.Enums;
+using HR_Project.DataLayer;
 using HR_Project.ViewModels;
 using HR_Project_Database.EntityFramework;
+using HR_Project_Database.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HR_Project.Controllers.Application
@@ -17,7 +18,7 @@ namespace HR_Project.Controllers.Application
         public ApplicationController(DataContext context)
         {
             this.context = context;
-            
+            applications = DatabaseReader.GetApplications(context);
         }
 
         public IActionResult Index()
@@ -25,12 +26,13 @@ namespace HR_Project.Controllers.Application
             return View(applications);
         }
 
-        public IActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var toDelete = applications.Where(offer => offer.Id == id);
-            if (toDelete.Count() == 1)
+            var toDelete = context.Application.Find(id);
+            if (toDelete != null)
             {
-                toDelete.First().Status = ApplicationStatus.Withdrawn;
+                toDelete.Status = ApplicationStatus.Withdrawn;
+                await context.SaveChangesAsync();
             }
 
             return RedirectToAction("Index", "Application");
@@ -39,45 +41,79 @@ namespace HR_Project.Controllers.Application
 
         public IActionResult Details(int id, bool isEditing)
         {
+            var baseModel = applications.Where(offer => offer.Id == id).FirstOrDefault();
+            if (string.IsNullOrEmpty(baseModel.FirstName))
+                baseModel.GetApplicationDetails(context);
+
             var model = new ApplicationDetailsViewModel
             {
-                ApplicationModel = applications.Where(application => application.Id == id).FirstOrDefault(),
+                ApplicationModel = baseModel,
                 IsEditing = isEditing
             };
             return View(model);
         }
 
-        public IActionResult Apply(int id)
+        public async Task<ActionResult> Apply(int id)
         {
-            var application = applications.Where(item => item.Id == id).FirstOrDefault();
+            var toUpdate = context.Application.Find(id);
 
-            if(application.Status == ApplicationStatus.Undefined)
-                application.Status = ApplicationStatus.Submitted;
+            if(toUpdate?.Status == ApplicationStatus.Undefined)
+            {
+                toUpdate.Status = ApplicationStatus.Submitted;
+                await context.SaveChangesAsync();
+            }
 
             return RedirectToAction("Index", "Application");
         }
 
         [HttpPost]
-        public IActionResult Save(int id, ApplicationDetailsViewModel model)
+        public async Task<ActionResult> Save(int id, ApplicationDetailsViewModel model)
         {
-            var oldModel = applications.Where(application => application.Id == id).FirstOrDefault();
-            ApplicationViewModel newModel = new ApplicationViewModel();
-            if (oldModel != null)
-            {
-                newModel = model.ApplicationModel;
-                newModel.Status = ApplicationStatus.Undefined;
-                newModel.JobTitle = oldModel.JobTitle;
-                newModel.Id = oldModel.Id;
+            var toUpdate = context.Application.Find(id);
+            if(toUpdate == null)
+                return RedirectToAction("Index", "Application");
 
-                if(oldModel.Status != ApplicationStatus.Undefined)
+            if(toUpdate.Status != ApplicationStatus.Undefined)
+            {
+                toUpdate.Status = ApplicationStatus.Withdrawn;
+                await context.SaveChangesAsync();
+
+                var newModel = new HR_Project_Database.Models.Application
                 {
-                    oldModel.Status = ApplicationStatus.Withdrawn;
-                    newModel.Id *= 10; //temporary
-                    applications.Add(newModel);
-                }
+                    JobOfferId = toUpdate.JobOfferId,
+                    UserId = toUpdate.UserId,
+                    Cvid = toUpdate.Cvid,
+                    AttachmentGroupId = toUpdate.AttachmentGroupId,
+                    ApplicationMessageId = toUpdate.ApplicationMessageId,
+                    Status = ApplicationStatus.Undefined
+                };
+
+                context.Application.Add(newModel);
+                await context.SaveChangesAsync();
+                id = newModel.IdApplication;
             }
 
-            return RedirectToAction("Details", new { id = newModel.Id, isEditing = true });
+            // TODO: Add support for attaching CV
+            // TODO: Add support for attaching files
+
+            ApplicationMessage message;
+            if ((message = context.ApplicationMessage.Find(toUpdate.ApplicationMessageId)) == null)
+            {
+                if(model.ApplicationModel.Message == null)
+                    return RedirectToAction("Details", new { id = id, isEditing = true });
+
+                message = new ApplicationMessage { MessageContent = model.ApplicationModel.Message };
+                context.ApplicationMessage.Add(message);
+                await context.SaveChangesAsync();
+                toUpdate.ApplicationMessageId = message.IdApplicationMessage;
+            }
+            else
+            {
+                message.MessageContent = model.ApplicationModel.Message;
+            }
+            await context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = id, isEditing = true });
         }
     }
 }

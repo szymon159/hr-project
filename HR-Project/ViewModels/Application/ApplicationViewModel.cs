@@ -20,7 +20,7 @@ namespace HR_Project.ViewModels
 
         public string CV { get; set; }
 
-        public string OtherAttachments { get; set; }
+        public string[] OtherAttachments { get; set; }
 
         public string Message { get; set; }
 

@@ -28,10 +28,10 @@ namespace HR_Project.Controllers
 
         public async Task<ActionResult> Delete(int id)
         {
-            var toDelete = context.JobOffer.Where(offer => offer.IdJobOffer == id);
-            if(toDelete.Count() == 1)
+            var toDelete = context.JobOffer.Find(id);
+            if(toDelete != null)
             {
-                toDelete.First().Status = JobOfferStatus.Inactive;
+                toDelete.Status = JobOfferStatus.Inactive;
                 await context.SaveChangesAsync();
             }
 
@@ -42,7 +42,7 @@ namespace HR_Project.Controllers
         {
             var baseModel = jobOffers.Where(offer => offer.Id == id).FirstOrDefault();
             if (baseModel.Description == null)
-                baseModel.Description = DatabaseReader.GetJobOfferDescription(context, id);
+                baseModel.GetJobOfferDetails(context);
 
             var model = new JobOfferDetailsViewModel
             {
@@ -55,7 +55,7 @@ namespace HR_Project.Controllers
         [HttpPost]
         public async Task<ActionResult> Save(int id, JobOfferDetailsViewModel model)
         {
-            var toUpdate = context.JobOffer.Where(offer => offer.IdJobOffer == id).FirstOrDefault();
+            var toUpdate = context.JobOffer.Find(id);
             if (toUpdate != null)
             {
                 toUpdate.Description = model.JobOfferModel.Description;
