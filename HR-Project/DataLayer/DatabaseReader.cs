@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.Internal;
+using System.IO;
 
 namespace HR_Project.DataLayer
 {
@@ -63,7 +65,7 @@ namespace HR_Project.DataLayer
             model.FirstName = user.FirstName;
             model.LastName = user.LastName;
             model.Email = user.Email;
-            model.CV = context.Cv.Find(application.Cvid)?.Cvpath;
+            model.CV = new FormFile(Stream.Null, 0, 0, "CV", application.Cvid.ToString() + ".pdf");
             model.OtherAttachments = attachments.Select(attachment => attachment.AttachmentPath)?.ToArray();
             model.Message = context.ApplicationMessage.Find(application.ApplicationMessageId)?.MessageContent;
         }

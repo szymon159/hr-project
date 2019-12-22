@@ -17,14 +17,11 @@
 
 <div class="application-property">
     <p class="application-property-label">CV - file:</p>
-    @if (Model.IsEditing == true)
+    @if (Model.ApplicationModel.CV != null)
     {
-        @Html.TextBoxFor(modelItem => Model.ApplicationModel.CV, new { @placeholder = "CV", @class = "application-property-edit" })
+        <p class="application-property-sublabel">(Already uploaded, choosing new file will replace old one)</p>
     }
-    else
-    {
-        @Html.TextBoxFor(modelItem => Model.ApplicationModel.CV, new { @readonly = "true", @placeholder = "CV", @class = "application-property-edit" })
-    }
+    @Html.TextBoxFor(modelItem => Model.ApplicationModel.CV, new { @name = "CV", @type = "file", @class = "application-property-edit" })
 </div>
 
 <div class="application-property">
