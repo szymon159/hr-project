@@ -67,17 +67,20 @@ namespace HR_Project.Controllers.Application
         }
 
         [HttpPost]
-        public async Task<ActionResult> Save(int id, ApplicationDetailsViewModel model)
+        public async Task<ActionResult> Save(int id, ApplicationDetailsViewModel viewModel)
         {
+            // Find application to update in DB
             var toUpdate = context.Application.Find(id);
             if(toUpdate == null)
                 return RedirectToAction("Index", "Application");
 
             if(toUpdate.Status != ApplicationStatus.Undefined)
             {
+                // If application was already submitted, withdraw it
                 toUpdate.Status = ApplicationStatus.Withdrawn;
                 await context.SaveChangesAsync();
 
+                // And create new application with data copied from previous one
                 var newModel = new HR_Project_Database.Models.Application
                 {
                     JobOfferId = toUpdate.JobOfferId,
@@ -91,25 +94,32 @@ namespace HR_Project.Controllers.Application
                 context.Application.Add(newModel);
                 await context.SaveChangesAsync();
                 id = newModel.IdApplication;
+                toUpdate = newModel;
             }
 
-            // TODO: Add support for attaching CV
+            // Replace CV if necessary - only in storage
+            if (viewModel.ApplicationModel.CV.Length != 0)
+            {
+                StorageContext.ReplaceCVFile(toUpdate.Cvid, viewModel.ApplicationModel.CV);
+            }
+
             // TODO: Add support for attaching files
 
+            // Replace message if necessary
             ApplicationMessage message;
             if ((message = context.ApplicationMessage.Find(toUpdate.ApplicationMessageId)) == null)
             {
-                if(model.ApplicationModel.Message == null)
+                if(viewModel.ApplicationModel.Message == null)
                     return RedirectToAction("Details", new { id = id, isEditing = true });
 
-                message = new ApplicationMessage { MessageContent = model.ApplicationModel.Message };
+                message = new ApplicationMessage { MessageContent = viewModel.ApplicationModel.Message };
                 context.ApplicationMessage.Add(message);
                 await context.SaveChangesAsync();
                 toUpdate.ApplicationMessageId = message.IdApplicationMessage;
             }
             else
             {
-                message.MessageContent = model.ApplicationModel.Message;
+                message.MessageContent = viewModel.ApplicationModel.Message;
             }
             await context.SaveChangesAsync();
 

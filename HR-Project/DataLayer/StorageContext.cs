@@ -47,22 +47,27 @@ namespace HR_Project.DataLayer
         //    return new FormFile(download.Content, 0, download.ContentLength, "CV", blobName);
         //}
 
-        public static async void UploadCVFileAsync(int cvId, IFormFile file)
+        public static void UploadCVFileAsync(int cvId, IFormFile file, bool overrideFile = false)
         {
             if (string.IsNullOrEmpty(storageConnectionString))
                 throw new ApplicationException("Connection string to Blob Storage not provided");
 
-            if (Path.GetExtension(file.FileName) != "pdf")
+            if (Path.GetExtension(file.FileName) != ".pdf")
                 throw new FormatException("CV-File must be in PDF format");
 
             var blobName = cvId.ToString() + ".pdf";
             BlobClient blobClient = containerClient.GetBlobClient(blobName);
 
-            using (FileStream uploadFileStream = File.OpenRead(file.FileName))
+            using (Stream uploadFileStream = file.OpenReadStream())
             {
-                await blobClient.UploadAsync(uploadFileStream);
+                blobClient.Upload(uploadFileStream, true);
                 uploadFileStream.Close();
             }
+        }
+
+        public static void ReplaceCVFile(int cvId, IFormFile file)
+        {
+            UploadCVFileAsync(cvId, file, true);
         }
     }
 }

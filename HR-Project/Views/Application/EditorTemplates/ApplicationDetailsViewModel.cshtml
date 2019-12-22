@@ -21,7 +21,7 @@
     {
         <p class="application-property-sublabel">(Already uploaded, choosing new file will replace old one)</p>
     }
-    @Html.TextBoxFor(modelItem => Model.ApplicationModel.CV, new { @name = "CV", @type = "file", @class = "application-property-edit" })
+    @Html.TextBoxFor(modelItem => Model.ApplicationModel.CV, new { @type = "file", @readonly = "true", @class = "application-property-edit" })
 </div>
 
 <div class="application-property">
