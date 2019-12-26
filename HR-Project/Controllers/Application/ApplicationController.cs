@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using HR_Project.DataLayer;
@@ -67,17 +68,20 @@ namespace HR_Project.Controllers.Application
         }
 
         [HttpPost]
-        public async Task<ActionResult> Save(int id, ApplicationDetailsViewModel model)
+        public async Task<ActionResult> Save(int id, ApplicationDetailsViewModel viewModel)
         {
+            // Find application to update in DB
             var toUpdate = context.Application.Find(id);
             if(toUpdate == null)
                 return RedirectToAction("Index", "Application");
 
             if(toUpdate.Status != ApplicationStatus.Undefined)
             {
+                // If application was already submitted, withdraw it
                 toUpdate.Status = ApplicationStatus.Withdrawn;
                 await context.SaveChangesAsync();
 
+                // And create new application with data copied from previous one
                 var newModel = new HR_Project_Database.Models.Application
                 {
                     JobOfferId = toUpdate.JobOfferId,
@@ -91,25 +95,49 @@ namespace HR_Project.Controllers.Application
                 context.Application.Add(newModel);
                 await context.SaveChangesAsync();
                 id = newModel.IdApplication;
+                toUpdate = newModel;
             }
 
-            // TODO: Add support for attaching CV
-            // TODO: Add support for attaching files
+            // If file with CV is selected, replace file in storage
+            if (viewModel.ApplicationModel.CV != null && viewModel.ApplicationModel.CV?.Length != 0)
+            {
+                StorageContext.ReplaceCVFile(toUpdate.Cvid, viewModel.ApplicationModel.CV);
+            }
 
+            // If new attachments are selected, add them to DB (creating new AttachmentGroup) and storage
+            if(viewModel.ApplicationModel.OtherAttachments != null && viewModel.ApplicationModel.OtherAttachments.Count != 0)
+            {
+                var attachmentGroup = new AttachmentGroup();
+                context.AttachmentGroup.Add(attachmentGroup);
+                await context.SaveChangesAsync();
+                var groupId = toUpdate.AttachmentGroupId = attachmentGroup.IdAttachmentGroup;
+
+                List<Attachment> attachments = new List<Attachment>();
+                foreach(var attachmentFile in viewModel.ApplicationModel.OtherAttachments)
+                {
+                    attachments.Add(new Attachment { AttachmentGroupId = groupId, Extension = Path.GetExtension(attachmentFile.FileName) });
+                }
+                await context.AddRangeAsync(attachments);
+                await context.SaveChangesAsync();
+
+                StorageContext.UploadAttachmentGroup(attachments, viewModel.ApplicationModel.OtherAttachments);
+            }
+
+            // Replace message if necessary
             ApplicationMessage message;
             if ((message = context.ApplicationMessage.Find(toUpdate.ApplicationMessageId)) == null)
             {
-                if(model.ApplicationModel.Message == null)
+                if(viewModel.ApplicationModel.Message == null)
                     return RedirectToAction("Details", new { id = id, isEditing = true });
 
-                message = new ApplicationMessage { MessageContent = model.ApplicationModel.Message };
+                message = new ApplicationMessage { MessageContent = viewModel.ApplicationModel.Message };
                 context.ApplicationMessage.Add(message);
                 await context.SaveChangesAsync();
                 toUpdate.ApplicationMessageId = message.IdApplicationMessage;
             }
             else
             {
-                message.MessageContent = model.ApplicationModel.Message;
+                message.MessageContent = viewModel.ApplicationModel.Message;
             }
             await context.SaveChangesAsync();
 

@@ -6,7 +6,7 @@
 
 <body>
     <h1>Application details:</h1>
-     @using (Html.BeginForm("Save", "Application", new { id = Model.ApplicationModel.Id }, FormMethod.Post))
+     @using (Html.BeginForm("Save", "Application", new { id = Model.ApplicationModel.Id }, FormMethod.Post, null, new { enctype = "multipart/form-data" }))
      {
         <div class="list-item">
             <div class="list-item-primary">

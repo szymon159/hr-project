@@ -238,6 +238,13 @@ h1 {
     font-weight: bold;
 }
 
+.application-property-sublabel {
+    font-style: italic;
+    font-size: 12px;
+    margin-top: -6px;
+    color: var(--green-text-color);
+}
+
 .application-property-edit {
     width: 90%
 }

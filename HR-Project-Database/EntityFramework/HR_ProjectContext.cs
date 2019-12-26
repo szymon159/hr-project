@@ -20,7 +20,6 @@ namespace HR_Project_Database.EntityFramework
         public virtual DbSet<ApplicationMessage> ApplicationMessage { get; set; }
         public virtual DbSet<Attachment> Attachment { get; set; }
         public virtual DbSet<AttachmentGroup> AttachmentGroup { get; set; }
-        public virtual DbSet<Cv> Cv { get; set; }
         public virtual DbSet<JobOffer> JobOffer { get; set; }
         public virtual DbSet<Responsibility> Responsibility { get; set; }
         public virtual DbSet<User> User { get; set; }
@@ -43,13 +42,6 @@ namespace HR_Project_Database.EntityFramework
                 new User{FirstName="Adam", LastName="Małysz", Email="a", Role=UserRole.User, UserProfileId=1}
             };
             User.AddRange(users);
-            SaveChanges();
-
-            var Cvs = new Cv[]
-            {
-                new Cv{Cvpath = "TestCV"}
-            };
-            Cv.AddRange(Cvs);
             SaveChanges();
 
             var applications = new Application[]
@@ -86,12 +78,6 @@ namespace HR_Project_Database.EntityFramework
                     .HasForeignKey(d => d.AttachmentGroupId)
                     .HasConstraintName("FK_Application_AttachmentGroup");
 
-                entity.HasOne(d => d.Cv)
-                    .WithMany(p => p.Application)
-                    .HasForeignKey(d => d.Cvid)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Application_CV");
-
                 entity.HasOne(d => d.JobOffer)
                     .WithMany(p => p.Application)
                     .HasForeignKey(d => d.JobOfferId)
@@ -122,10 +108,10 @@ namespace HR_Project_Database.EntityFramework
 
                 entity.Property(e => e.IdAttachment).HasColumnName("Id_Attachment");
 
-                entity.Property(e => e.AttachmentPath)
+                entity.Property(e => e.Extension)
                     .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                    .HasMaxLength(10)
+                    .IsUnicode(true);
 
                 entity.HasOne(d => d.AttachmentGroup)
                     .WithMany(p => p.Attachment)
@@ -138,21 +124,6 @@ namespace HR_Project_Database.EntityFramework
                 entity.HasKey(e => e.IdAttachmentGroup);
 
                 entity.Property(e => e.IdAttachmentGroup).HasColumnName("Id_AttachmentGroup");
-            });
-
-            modelBuilder.Entity<Cv>(entity =>
-            {
-                entity.HasKey(e => e.IdCv);
-
-                entity.ToTable("CV");
-
-                entity.Property(e => e.IdCv).HasColumnName("Id_CV");
-
-                entity.Property(e => e.Cvpath)
-                    .IsRequired()
-                    .HasColumnName("CVPath")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<JobOffer>(entity =>
