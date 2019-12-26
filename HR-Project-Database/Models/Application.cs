@@ -15,7 +15,6 @@ namespace HR_Project_Database.Models
 
         public ApplicationMessage ApplicationMessage { get; set; }
         public AttachmentGroup AttachmentGroup { get; set; }
-        public Cv Cv { get; set; }
         public JobOffer JobOffer { get; set; }
         public User User { get; set; }
     }

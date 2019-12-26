@@ -85,7 +85,7 @@ namespace HR_Project.DataLayer
             int i = 0;
             foreach(var attachmentEntity in attachmentEntities)
             {
-                var blobName = attachmentEntity.IdAttachment.ToString() + attachmentEntity.AttachmentPath;
+                var blobName = attachmentEntity.IdAttachment.ToString() + attachmentEntity.Extension;
                 BlobClient blobClient = attachmentContainerClient.GetBlobClient(blobName);
 
                 using (Stream uploadFileStream = attachmentFiles[i].OpenReadStream())

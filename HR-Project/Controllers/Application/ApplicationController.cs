@@ -115,7 +115,7 @@ namespace HR_Project.Controllers.Application
                 List<Attachment> attachments = new List<Attachment>();
                 foreach(var attachmentFile in viewModel.ApplicationModel.OtherAttachments)
                 {
-                    attachments.Add(new Attachment { AttachmentGroupId = groupId, AttachmentPath = Path.GetExtension(attachmentFile.FileName) });
+                    attachments.Add(new Attachment { AttachmentGroupId = groupId, Extension = Path.GetExtension(attachmentFile.FileName) });
                 }
                 await context.AddRangeAsync(attachments);
                 await context.SaveChangesAsync();
