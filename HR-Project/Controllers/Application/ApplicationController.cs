@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using HR_Project.DataLayer;
@@ -97,13 +98,30 @@ namespace HR_Project.Controllers.Application
                 toUpdate = newModel;
             }
 
-            // Replace CV if necessary - only in storage
-            if (viewModel.ApplicationModel.CV.Length != 0)
+            // If file with CV is selected, replace file in storage
+            if (viewModel.ApplicationModel.CV != null && viewModel.ApplicationModel.CV?.Length != 0)
             {
                 StorageContext.ReplaceCVFile(toUpdate.Cvid, viewModel.ApplicationModel.CV);
             }
 
-            // TODO: Add support for attaching files
+            // If new attachments are selected, add them to DB (creating new AttachmentGroup) and storage
+            if(viewModel.ApplicationModel.OtherAttachments != null && viewModel.ApplicationModel.OtherAttachments.Count != 0)
+            {
+                var attachmentGroup = new AttachmentGroup();
+                context.AttachmentGroup.Add(attachmentGroup);
+                await context.SaveChangesAsync();
+                var groupId = toUpdate.AttachmentGroupId = attachmentGroup.IdAttachmentGroup;
+
+                List<Attachment> attachments = new List<Attachment>();
+                foreach(var attachmentFile in viewModel.ApplicationModel.OtherAttachments)
+                {
+                    attachments.Add(new Attachment { AttachmentGroupId = groupId, AttachmentPath = Path.GetExtension(attachmentFile.FileName) });
+                }
+                await context.AddRangeAsync(attachments);
+                await context.SaveChangesAsync();
+
+                StorageContext.UploadAttachmentGroup(attachments, viewModel.ApplicationModel.OtherAttachments);
+            }
 
             // Replace message if necessary
             ApplicationMessage message;

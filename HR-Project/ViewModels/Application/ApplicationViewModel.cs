@@ -21,8 +21,10 @@ namespace HR_Project.ViewModels
         public string Email { get; set; }
 
         public IFormFile CV { get; set; }
+        public bool IsCvUploaded { get; set; }
 
-        public string[] OtherAttachments { get; set; }
+        public List<IFormFile> OtherAttachments { get; set; }
+        public bool IsAttachmentsUploaded { get; set; }
 
         public string Message { get; set; }
 

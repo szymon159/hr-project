@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using HR_Project_Database.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using System;
@@ -14,8 +15,10 @@ namespace HR_Project.DataLayer
     {
         private static string storageConnectionString;
         private static BlobServiceClient blobServiceClient;
-        private static readonly string containerName = "blobs";
-        private static BlobContainerClient containerClient;
+        private static readonly string cvContainerName = "cv-blobs";
+        private static BlobContainerClient cvContainerClient;
+        private static readonly string attachmentContainerName = "attachment-blobs";
+        private static BlobContainerClient attachmentContainerClient;
 
         public static void Setup(string connectionString)
         {
@@ -25,7 +28,8 @@ namespace HR_Project.DataLayer
             blobServiceClient = new BlobServiceClient(storageConnectionString);
 
             // Create the container and return a container client object
-            containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            cvContainerClient = blobServiceClient.GetBlobContainerClient(cvContainerName);
+            attachmentContainerClient = blobServiceClient.GetBlobContainerClient(attachmentContainerName);
         }
 
         //public static async Task<IFormFile> DownloadCVFileAsync(int cvId)
@@ -47,7 +51,7 @@ namespace HR_Project.DataLayer
         //    return new FormFile(download.Content, 0, download.ContentLength, "CV", blobName);
         //}
 
-        public static void UploadCVFileAsync(int cvId, IFormFile file, bool overrideFile = false)
+        public static void UploadCVFile(int cvId, IFormFile file, bool overrideFile = false)
         {
             if (string.IsNullOrEmpty(storageConnectionString))
                 throw new ApplicationException("Connection string to Blob Storage not provided");
@@ -56,18 +60,41 @@ namespace HR_Project.DataLayer
                 throw new FormatException("CV-File must be in PDF format");
 
             var blobName = cvId.ToString() + ".pdf";
-            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+            BlobClient blobClient = cvContainerClient.GetBlobClient(blobName);
 
             using (Stream uploadFileStream = file.OpenReadStream())
             {
-                blobClient.Upload(uploadFileStream, true);
+                blobClient.Upload(uploadFileStream, overrideFile);
                 uploadFileStream.Close();
             }
         }
 
         public static void ReplaceCVFile(int cvId, IFormFile file)
         {
-            UploadCVFileAsync(cvId, file, true);
+            UploadCVFile(cvId, file, true);
+        }
+
+        public static void UploadAttachmentGroup(List<Attachment> attachmentEntities, List<IFormFile> attachmentFiles)
+        {
+            if (string.IsNullOrEmpty(storageConnectionString))
+                throw new ApplicationException("Connection string to Blob Storage not provided");
+
+            if (attachmentEntities.Count() != attachmentFiles.Count())
+                throw new ApplicationException("Number of uploaded files is different than in database");
+
+            int i = 0;
+            foreach(var attachmentEntity in attachmentEntities)
+            {
+                var blobName = attachmentEntity.IdAttachment.ToString() + attachmentEntity.AttachmentPath;
+                BlobClient blobClient = attachmentContainerClient.GetBlobClient(blobName);
+
+                using (Stream uploadFileStream = attachmentFiles[i].OpenReadStream())
+                {
+                    blobClient.Upload(uploadFileStream);
+                    uploadFileStream.Close();
+                }
+                i++;
+            }
         }
     }
 }

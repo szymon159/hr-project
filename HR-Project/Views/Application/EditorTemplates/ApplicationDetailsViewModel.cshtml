@@ -17,7 +17,7 @@
 
 <div class="application-property">
     <p class="application-property-label">CV - file:</p>
-    @if (Model.ApplicationModel.CV != null)
+    @if (Model.ApplicationModel.IsCvUploaded)
     {
         <p class="application-property-sublabel">(Already uploaded, choosing new file will replace old one)</p>
     }
@@ -26,14 +26,19 @@
 
 <div class="application-property">
     <p class="application-property-label">Other attachments:</p>
-    @if (Model.IsEditing == true)
+    @if (Model.ApplicationModel.IsAttachmentsUploaded)
+    {
+        <p class="application-property-sublabel">(Already uploaded, selecting new file will replace all previously uploaded)</p>
+    }
+    @Html.TextBoxFor(modelItem => Model.ApplicationModel.OtherAttachments, new { @type = "file", @readonly = "true", @multiple = "true", @class = "application-property-edit" })
+    @*@if (Model.IsEditing == true)
     {
         @Html.TextBoxFor(modelItem => Model.ApplicationModel.OtherAttachments, new { @placeholder = "Attachments", @class = "application-property-edit" })
     }
     else
     {
         @Html.TextBoxFor(modelItem => Model.ApplicationModel.OtherAttachments, new { @readonly = "true", @placeholder = "Attachments", @class = "application-property-edit" })
-    }
+    }*@
 </div>
 
 <div class="application-property">
