@@ -39,7 +39,7 @@ namespace HR_Project_Database.EntityFramework
 
             var users = new User[]
             {
-                new User{FirstName="Adam", LastName="Małysz", Email="a", Role=UserRole.User, UserProfileId=1}
+                new User{FirstName="Adam", LastName="Małysz", Email="a", Role=UserRole.User, ExternalId="1"}
             };
             User.AddRange(users);
             SaveChanges();
@@ -175,6 +175,11 @@ namespace HR_Project_Database.EntityFramework
                 entity.Property(e => e.IdUser).HasColumnName("Id_User");
 
                 entity.Property(e => e.Role).HasColumnName("Role");
+
+                entity.Property(e => e.ExternalId)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Email)
                     .IsRequired()

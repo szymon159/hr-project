@@ -16,7 +16,7 @@ namespace HR_Project_Database.Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public UserRole Role { get; set; }
-        public int UserProfileId { get; set; }
+        public string ExternalId { get; set; }
 
         public ICollection<Application> Application { get; set; }
         public ICollection<Responsibility> Responsibility { get; set; }
