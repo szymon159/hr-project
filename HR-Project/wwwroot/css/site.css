@@ -10,6 +10,7 @@
     --darker-grey-text-color: #444444;
     --green-text-color: #629c44;
     --red-text-color: #e61610;
+    --dark-red-text-color: #660a07;
     --button-border-color: #939393;
 }
 
@@ -67,7 +68,33 @@ body {
 
 .topbar-user-button {
     height: 80px;
-    font-size: 30px;
+    /*font-size: 30px;*/
+    overflow: hidden;
+}
+
+.topbar-user-caption-area{
+    flex-direction: column;
+}
+
+.topbar-user-name {
+    margin: -5px 0px -10px 0px;
+    font-weight: bold;
+}
+
+.topbar-logout {
+    font-size: 16px;
+}
+
+.topbar-log {
+    font-weight: bold;
+    color: var(--darker-grey-text-color);
+}
+
+.topbar-log:visited,
+.topbar-log:active,
+.topbar-log:hover {
+    color: var(--darker-grey-text-color);
+    text-decoration: none;
 }
 
 .topbar-button:visited,

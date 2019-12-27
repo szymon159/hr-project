@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.AzureADB2C.UI;
 
 namespace HR_Project
 {
@@ -37,6 +39,10 @@ namespace HR_Project
             var dbConnectionString = Configuration["DatabaseConnectionString"];
 
             services.AddDbContext<DataContext>(options => options.UseSqlServer(dbConnectionString));
+
+            services.AddAuthentication(AzureADB2CDefaults.AuthenticationScheme)
+               .AddAzureADB2C(options => Configuration.Bind("AzureAdB2C", options));
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             StorageContext.Setup(Configuration["StorageConnectionString"]);
@@ -69,6 +75,8 @@ namespace HR_Project
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
