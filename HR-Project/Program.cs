@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using HR_Project.Enums;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +13,9 @@ namespace HR_Project
 {
     public class Program
     {
+        public static bool IsUserChecked = false;
+        public static UserRole LoggedUserRole = UserRole.Unlogged;
+
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();

@@ -9,8 +9,8 @@ namespace HR_Project.Controllers
 {
     public class LoginController : ControllerBase
     {
-        [HttpPost]
-        [Route("/signin")]
+        [HttpPost("signin")]
+        //[Route("signin")]
         public IActionResult Login()
         {
             return RedirectToAction("Index", "JobOffer");
