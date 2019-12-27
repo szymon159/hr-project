@@ -8,6 +8,35 @@
         @Html.ActionLink("Manage users", "Index", "UserManagement", null, new { @class = "topbar-button users-icon" })
     </div>
     <div class="topbar-user-area">
-        @Html.ActionLink("Manage users", "Index", "UserManagement", null, new { @class = "topbar-button topbar-user-button user-icon" })
+        <div class="topbar-button topbar-user-button user-icon">
+            <div class="topbar-user-caption-area">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <p class="topbar-user-name">@User.Claims.ElementAt(1).Value @User.Claims.ElementAt(2).Value</p>
+                    @Html.ActionLink("Sign out", "SignOut", "Account", new { Area = "AzureADB2C" }, new { @class = "topbar-log topbar-logout" })
+                    @*<a class="topbar-logout" asp-area="AzureADB2C" asp-controller="Account" asp-action="SignOut">Sign out</a>*@
+                }
+                else
+                {
+                    @Html.ActionLink("Sign in", "SignIn", "Account", new { Area = "AzureADB2C" }, new { @class = "topbar-log topbar-user-name" })
+                }
+            </div>
+        </div>
+        @*@Html.ActionLink("Manage users", "Index", "UserManagement", null, new { @class = "topbar-button topbar-user-button user-icon" })*@
     </div>
 </div>
+
+
+@*@if (User.Identity.IsAuthenticated)
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li class="navbar-text">Hello @User.Claims.ElementAt(1).Value @User.Claims.ElementAt(2).Value!</li>
+        <li><a asp-area="AzureADB2C" asp-controller="Account" asp-action="SignOut">Sign out</a></li>
+    </ul>
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li><a asp-area="AzureADB2C" asp-controller="Account" asp-action="SignIn">Sign in</a></li>
+    </ul>
+}*@

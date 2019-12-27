@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HR_Project.DataLayer;
+using HR_Project.ModelConverters;
 using HR_Project.ViewModels;
+using HR_Project.ViewModels.User;
 using HR_Project_Database.EntityFramework;
 using HR_Project_Database.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -21,8 +23,42 @@ namespace HR_Project.Controllers
             jobOffers = DatabaseReader.GetJobOffers(context);
         }
 
-        public IActionResult Index()
+        public async Task<ActionResult> Index()
         {
+            if(User.Identity.IsAuthenticated)
+            {
+                if(!Program.IsUserChecked)
+                {
+                    var claims = User.Claims;
+
+                    var user = new UserViewModel
+                    {
+                        FirstName = claims.ElementAt(1).Value,
+                        LastName = claims.ElementAt(2).Value,
+                        ExternalId = claims.ElementAt(0).Value,
+                        Role = Enums.UserRole.User
+                    };
+
+                    User dbUser = context.User.FirstOrDefault(entity => entity.ExternalId == user.ExternalId);
+                    if(dbUser == null)
+                    {
+                        context.User.Add(user.ToDatabaseModel());
+                        await context.SaveChangesAsync();
+                        Program.LoggedUserRole = Enums.UserRole.User;
+                    }
+                    else
+                    {
+                        Program.LoggedUserRole = (Enums.UserRole)dbUser.Role;
+                    }
+                    Program.IsUserChecked = true;
+                }
+            }
+            else if(Program.IsUserChecked)
+            {
+                Program.IsUserChecked = false;
+                Program.LoggedUserRole = Enums.UserRole.Unlogged;
+            }
+
             return View(jobOffers);
         }
 
