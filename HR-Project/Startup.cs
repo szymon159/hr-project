@@ -45,6 +45,11 @@ namespace HR_Project
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddSession(options =>
+            {
+                options.Cookie.IsEssential = true;
+            });
+
             StorageContext.Setup(Configuration["StorageConnectionString"]);
         }
 
@@ -74,6 +79,7 @@ namespace HR_Project
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSession();
             app.UseCookiePolicy();
 
             app.UseAuthentication();
