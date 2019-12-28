@@ -4,8 +4,24 @@
     </div>
     <div class="topbar-buttons-area">
         @Html.ActionLink("Job Offers", "Index", "JobOffer", null, new { @class = "topbar-button job-offers-icon" })
-        @Html.ActionLink("My applications", "Index", "Application", null, new { @class = "topbar-button application-icon" })
-        @Html.ActionLink("Manage users", "Index", "UserManagement", null, new { @class = "topbar-button users-icon" })
+        @if (User.Identity.IsAuthenticated)
+        {
+            @switch (Program.LoggedUserRole)
+            {
+                case HR_Project.Enums.UserRole.User:
+                    @Html.ActionLink("My applications", "Index", "Application", null, new { @class = "topbar-button application-icon" })
+                    break;
+                case HR_Project.Enums.UserRole.HR:
+                    @Html.ActionLink("Applications", "Index", "Application", null, new { @class = "topbar-button application-icon" })
+                    break;
+                case HR_Project.Enums.UserRole.Admin:
+                    @Html.ActionLink("Applications", "Index", "Application", null, new { @class = "topbar-button application-icon" })
+                    @Html.ActionLink("Manage users", "Index", "UserManagement", null, new { @class = "topbar-button users-icon" })
+                    break;
+                default:
+                    break;
+            }
+        }
     </div>
     <div class="topbar-user-area">
         <div class="topbar-button topbar-user-button user-icon">
@@ -14,7 +30,6 @@
                 {
                     <p class="topbar-user-name">@User.Claims.ElementAt(1).Value @User.Claims.ElementAt(2).Value</p>
                     @Html.ActionLink("Sign out", "SignOut", "Account", new { Area = "AzureADB2C" }, new { @class = "topbar-log topbar-logout" })
-                    @*<a class="topbar-logout" asp-area="AzureADB2C" asp-controller="Account" asp-action="SignOut">Sign out</a>*@
                 }
                 else
                 {
@@ -22,21 +37,5 @@
                 }
             </div>
         </div>
-        @*@Html.ActionLink("Manage users", "Index", "UserManagement", null, new { @class = "topbar-button topbar-user-button user-icon" })*@
     </div>
 </div>
-
-
-@*@if (User.Identity.IsAuthenticated)
-{
-    <ul class="nav navbar-nav navbar-right">
-        <li class="navbar-text">Hello @User.Claims.ElementAt(1).Value @User.Claims.ElementAt(2).Value!</li>
-        <li><a asp-area="AzureADB2C" asp-controller="Account" asp-action="SignOut">Sign out</a></li>
-    </ul>
-}
-else
-{
-    <ul class="nav navbar-nav navbar-right">
-        <li><a asp-area="AzureADB2C" asp-controller="Account" asp-action="SignIn">Sign in</a></li>
-    </ul>
-}*@
