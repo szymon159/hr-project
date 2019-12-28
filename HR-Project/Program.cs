@@ -13,9 +13,6 @@ namespace HR_Project
 {
     public class Program
     {
-        public static bool IsUserChecked = false;
-        public static UserRole LoggedUserRole = UserRole.Unlogged;
-
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();

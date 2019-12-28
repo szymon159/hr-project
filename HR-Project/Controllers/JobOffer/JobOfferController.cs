@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HR_Project.DataLayer;
+using HR_Project.Enums;
+using HR_Project.ExtensionMethods;
 using HR_Project.ModelConverters;
 using HR_Project.ViewModels;
 using HR_Project.ViewModels.User;
 using HR_Project_Database.EntityFramework;
-using HR_Project_Database.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HR_Project.Controllers
@@ -21,13 +22,22 @@ namespace HR_Project.Controllers
         {
             this.context = context;
             jobOffers = DatabaseReader.GetJobOffers(context);
+
+            //if (HttpContext.Session.Get<bool>("IsUserChecked") == null)
+            //    HttpContext.Session.Set("IsUserChecked", false);
+
+            //if (HttpContext.Session.Get<UserRole>("LoggedUserRole") == null)
+            //    HttpContext.Session.Set("LoggedUserRole", UserRole.Unlogged);
         }
 
         public async Task<ActionResult> Index()
         {
+            bool isUserChecked = HttpContext.Session.Get<bool>("IsUserChecked");
+            UserRole userRole = HttpContext.Session.Get<UserRole>("LoggedUserRole");
+
             if(User.Identity.IsAuthenticated)
             {
-                if(!Program.IsUserChecked)
+                if(!isUserChecked)
                 {
                     var claims = User.Claims;
 
@@ -36,27 +46,27 @@ namespace HR_Project.Controllers
                         FirstName = claims.ElementAt(1).Value,
                         LastName = claims.ElementAt(2).Value,
                         ExternalId = claims.ElementAt(0).Value,
-                        Role = Enums.UserRole.User
+                        Role = UserRole.User
                     };
 
-                    User dbUser = context.User.FirstOrDefault(entity => entity.ExternalId == user.ExternalId);
+                    HR_Project_Database.Models.User dbUser = context.User.FirstOrDefault(entity => entity.ExternalId == user.ExternalId);
                     if(dbUser == null)
                     {
                         context.User.Add(user.ToDatabaseModel());
                         await context.SaveChangesAsync();
-                        Program.LoggedUserRole = Enums.UserRole.User;
+                        HttpContext.Session.Set("LoggedUserRole",UserRole.User);
                     }
                     else
                     {
-                        Program.LoggedUserRole = (Enums.UserRole)dbUser.Role;
+                        HttpContext.Session.Set("LoggedUserRole", dbUser.Role);
                     }
-                    Program.IsUserChecked = true;
+                    HttpContext.Session.Set("IsUserChecked", true);
                 }
             }
-            else if(Program.IsUserChecked)
+            else if(isUserChecked)
             {
-                Program.IsUserChecked = false;
-                Program.LoggedUserRole = Enums.UserRole.Unlogged;
+                HttpContext.Session.Set("IsUserChecked", false);
+                HttpContext.Session.Set("LoggedUserRole", UserRole.Unlogged);
             }
 
             return View(jobOffers);
@@ -67,7 +77,7 @@ namespace HR_Project.Controllers
             var toDelete = context.JobOffer.Find(id);
             if(toDelete != null)
             {
-                toDelete.Status = JobOfferStatus.Inactive;
+                toDelete.Status = HR_Project_Database.Models.JobOfferStatus.Inactive;
                 await context.SaveChangesAsync();
             }
 
