@@ -1,4 +1,6 @@
-﻿@model IEnumerable<ApplicationViewModel>
+﻿@using HR_Project.Enums;
+@using HR_Project.ExtensionMethods;
+@model IEnumerable<ApplicationViewModel>
 @{
     ViewData["Title"] = "Applications";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -13,19 +15,26 @@
             <div class="list-item-primary">
                 <div class="list-item-title">
                     <h2 class="list-item-title-main">@Html.DisplayFor(modelItem => item.JobTitle) </h2>
-                    <p class="list-item-title-details">Status: 
-                        <span class="application-status @item.StatusCssClass">@Html.DisplayFor(modelItem => item.Status)</span> 
+                    <p class="list-item-title-details">
+                        Status:
+                        <span class="application-status @item.StatusCssClass">@Html.DisplayFor(modelItem => item.Status)</span>
                     </p>
                 </div>
-                @Html.ActionLink("View Details", "Details", "Application", new { id = item.Id, isEditing = false }, new { @class = "btn button" })
+                @if (Context.Session.Get<UserRole>("LoggedUserRole") != UserRole.Admin)
+                {
+                    @Html.ActionLink("View Details", "Details", "Application", new { id = item.Id, isEditing = false }, new { @class = "btn button" })
+                }
             </div>
-            <div class="list-item-secondary">
-                @Html.ActionLink("Edit application", "Details", "Application", new { id = item.Id, isEditing = true }, new { @class = "btn button" })
-            </div>
-            <div class="list-item-tertiary">
-                @Html.ActionLink("Send application", "Apply", "Application", new { id = item.Id }, new { @class = "btn button lightgreen" })
-                @Html.ActionLink("Withdraw", "Delete", "Application", new { id = item.Id }, new { @class = "btn button lightred" })
-            </div>
+            @if (Context.Session.Get<UserRole>("LoggedUserRole") != UserRole.Admin)
+            {
+                <div class="list-item-secondary">
+                    @Html.ActionLink("Edit application", "Details", "Application", new { id = item.Id, isEditing = true }, new { @class = "btn button" })
+                </div>
+                <div class="list-item-tertiary">
+                    @Html.ActionLink("Send application", "Apply", "Application", new { id = item.Id }, new { @class = "btn button lightgreen" })
+                    @Html.ActionLink("Withdraw", "Delete", "Application", new { id = item.Id }, new { @class = "btn button lightred" })
+                </div>
+            }
         </div>
     }
 </body>

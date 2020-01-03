@@ -11,13 +11,13 @@
         {
             @switch (Context.Session.Get<UserRole>("LoggedUserRole"))
             {
-                case HR_Project.Enums.UserRole.User:
+                case UserRole.User:
                     @Html.ActionLink("My applications", "Index", "Application", null, new { @class = "topbar-button application-icon" })
                     break;
-                case HR_Project.Enums.UserRole.HR:
+                case UserRole.HR:
                     @Html.ActionLink("Applications", "Index", "Application", null, new { @class = "topbar-button application-icon" })
                     break;
-                case HR_Project.Enums.UserRole.Admin:
+                case UserRole.Admin:
                     @Html.ActionLink("Applications", "Index", "Application", null, new { @class = "topbar-button application-icon" })
                     @Html.ActionLink("Manage users", "Index", "UserManagement", null, new { @class = "topbar-button users-icon" })
                     break;
