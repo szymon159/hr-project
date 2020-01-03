@@ -1,5 +1,5 @@
 ﻿@using HR_Project.Enums;
-@using HR_Project.ExtensionMethods;
+@using System.Security.Claims;
 
 <div class="topbar">
     <div class="topbar-logo-area">
@@ -9,20 +9,18 @@
         @Html.ActionLink("Job Offers", "Index", "JobOffer", null, new { @class = "topbar-button job-offers-icon" })
         @if (User.Identity.IsAuthenticated)
         {
-            @switch (Context.Session.Get<UserRole>("LoggedUserRole"))
+            @if (User.IsInRole(UserRole.User.ToString()))
             {
-                case UserRole.User:
-                    @Html.ActionLink("My applications", "Index", "Application", null, new { @class = "topbar-button application-icon" })
-                    break;
-                case UserRole.HR:
-                    @Html.ActionLink("Applications", "Index", "Application", null, new { @class = "topbar-button application-icon" })
-                    break;
-                case UserRole.Admin:
-                    @Html.ActionLink("Applications", "Index", "Application", null, new { @class = "topbar-button application-icon" })
-                    @Html.ActionLink("Manage users", "Index", "UserManagement", null, new { @class = "topbar-button users-icon" })
-                    break;
-                default:
-                    break;
+                @Html.ActionLink("My applications", "Index", "Application", null, new { @class = "topbar-button application-icon" })
+            }
+            else if (User.IsInRole(UserRole.HR.ToString()))
+            {
+                @Html.ActionLink("Applications", "Index", "Application", null, new { @class = "topbar-button application-icon" })
+            }
+            else if (User.IsInRole(UserRole.Admin.ToString()))
+            {
+                @Html.ActionLink("Applications", "Index", "Application", null, new { @class = "topbar-button application-icon" })
+                @Html.ActionLink("Manage users", "Index", "UserManagement", null, new { @class = "topbar-button users-icon" })
             }
         }
     </div>
@@ -31,12 +29,12 @@
             <div class="topbar-user-caption-area">
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <p class="topbar-user-name">@User.Claims.ElementAt(1).Value @User.Claims.ElementAt(2).Value</p>
-                    @Html.ActionLink("Sign out", "SignOut", "Account", new { Area = "AzureADB2C" }, new { @class = "topbar-log topbar-logout" })
+                    <p class="topbar-user-name">@User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.GivenName).Value @User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Surname).Value</p>
+                    @Html.ActionLink("Sign Out", "SignOut", "Login", null, new { @class = "topbar-log topbar-logout" })
                 }
                 else
                 {
-                    @Html.ActionLink("Sign in", "SignIn", "Account", new { Area = "AzureADB2C" }, new { @class = "topbar-log topbar-user-name" })
+                    @Html.ActionLink("Sign In", "SignIn", "Login", null, new { @class = "topbar-log topbar-user-name" })
                 }
             </div>
         </div>

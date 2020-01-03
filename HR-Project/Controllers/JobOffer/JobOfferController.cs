@@ -7,7 +7,6 @@ using HR_Project.Enums;
 using HR_Project.ExtensionMethods;
 using HR_Project.ModelConverters;
 using HR_Project.ViewModels;
-using HR_Project.ViewModels.User;
 using HR_Project_Database.EntityFramework;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,53 +21,10 @@ namespace HR_Project.Controllers
         {
             this.context = context;
             jobOffers = DatabaseReader.GetJobOffers(context);
-
-            //if (HttpContext.Session.Get<bool>("IsUserChecked") == null)
-            //    HttpContext.Session.Set("IsUserChecked", false);
-
-            //if (HttpContext.Session.Get<UserRole>("LoggedUserRole") == null)
-            //    HttpContext.Session.Set("LoggedUserRole", UserRole.Unlogged);
         }
 
-        public async Task<ActionResult> Index()
+        public IActionResult Index()
         {
-            bool isUserChecked = HttpContext.Session.Get<bool>("IsUserChecked");
-            UserRole userRole = HttpContext.Session.Get<UserRole>("LoggedUserRole");
-
-            if(User.Identity.IsAuthenticated)
-            {
-                if(!isUserChecked)
-                {
-                    var claims = User.Claims;
-
-                    var user = new UserViewModel
-                    {
-                        FirstName = claims.ElementAt(1).Value,
-                        LastName = claims.ElementAt(2).Value,
-                        ExternalId = claims.ElementAt(0).Value,
-                        Role = UserRole.User
-                    };
-
-                    HR_Project_Database.Models.User dbUser = context.User.FirstOrDefault(entity => entity.ExternalId == user.ExternalId);
-                    if(dbUser == null)
-                    {
-                        context.User.Add(user.ToDatabaseModel());
-                        await context.SaveChangesAsync();
-                        HttpContext.Session.Set("LoggedUserRole",UserRole.User);
-                    }
-                    else
-                    {
-                        HttpContext.Session.Set("LoggedUserRole", dbUser.Role);
-                    }
-                    HttpContext.Session.Set("IsUserChecked", true);
-                }
-            }
-            else if(isUserChecked)
-            {
-                HttpContext.Session.Set("IsUserChecked", false);
-                HttpContext.Session.Set("LoggedUserRole", UserRole.Unlogged);
-            }
-
             return View(jobOffers);
         }
 
