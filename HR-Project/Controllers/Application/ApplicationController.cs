@@ -7,10 +7,12 @@ using HR_Project.DataLayer;
 using HR_Project.ViewModels;
 using HR_Project_Database.EntityFramework;
 using HR_Project_Database.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HR_Project.Controllers.Application
 {
+    [Authorize]
     public class ApplicationController : Controller
     {
         private readonly DataContext context;
@@ -27,6 +29,7 @@ namespace HR_Project.Controllers.Application
             return View(applications);
         }
 
+        [Authorize(Roles =("User"))]
         public async Task<ActionResult> Delete(int id)
         {
             var toDelete = context.Application.Find(id);
@@ -39,7 +42,8 @@ namespace HR_Project.Controllers.Application
             return RedirectToAction("Index", "Application");
         }
 
-
+        // If user is HR, always return IsEditing = false, theoretically it might be possible for HR to edit details but they will never be saved
+        [Authorize(Roles = ("User, HR"))]
         public IActionResult Details(int id, bool isEditing)
         {
             var baseModel = applications.Where(offer => offer.Id == id).FirstOrDefault();
@@ -49,11 +53,12 @@ namespace HR_Project.Controllers.Application
             var model = new ApplicationDetailsViewModel
             {
                 ApplicationModel = baseModel,
-                IsEditing = isEditing
+                IsEditing = isEditing && !User.IsInRole(UserRole.HR.ToString())
             };
             return View(model);
         }
 
+        [Authorize(Roles = ("User"))]
         public async Task<ActionResult> Apply(int id)
         {
             var toUpdate = context.Application.Find(id);
@@ -68,6 +73,7 @@ namespace HR_Project.Controllers.Application
         }
 
         [HttpPost]
+        [Authorize(Roles = ("User"))]
         public async Task<ActionResult> Save(int id, ApplicationDetailsViewModel viewModel)
         {
             // Find application to update in DB
