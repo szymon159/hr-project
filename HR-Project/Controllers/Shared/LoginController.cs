@@ -32,9 +32,7 @@ namespace HR_Project.Controllers.Shared
         [HttpGet]
         public IActionResult SignOut(bool passwordReset = false)
         {
-            var callbackUrl = Url.Action("Index", "JobOffer");
-            if (passwordReset)
-                callbackUrl = Url.Action("PasswordResetSuccess", "Login");
+            var callbackUrl = passwordReset ? Url.Action("PasswordResetSuccess", "Login") : Url.Action("Index", "JobOffer");
             return SignOut(new AuthenticationProperties { RedirectUri = callbackUrl }, CookieAuthenticationDefaults.AuthenticationScheme, OpenIdConnectDefaults.AuthenticationScheme);
         }
 
