@@ -1,4 +1,4 @@
-﻿using HR_Project.ViewModels.User;
+﻿using HR_Project.ViewModels;
 using HR_Project_Database.Models;
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ namespace HR_Project.ModelConverters
                 LastName = viewModel.LastName,
                 Role = (UserRole)viewModel.Role,
                 ExternalId = viewModel.ExternalId,
-                Email = ""
+                Email = viewModel.Email
             };
         }
 
@@ -28,7 +28,8 @@ namespace HR_Project.ModelConverters
                 FirstName = databaseModel.FirstName,
                 LastName = databaseModel.LastName,
                 Role = (Enums.UserRole)databaseModel.Role,
-                ExternalId = databaseModel.ExternalId
+                ExternalId = databaseModel.ExternalId,
+                Email = databaseModel.Email
             };
         }
     }

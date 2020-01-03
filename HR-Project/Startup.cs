@@ -14,6 +14,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureADB2C.UI;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using HR_Project.ExtensionMethods;
+using System.Net;
 
 namespace HR_Project
 {
@@ -40,13 +44,21 @@ namespace HR_Project
 
             services.AddDbContext<DataContext>(options => options.UseSqlServer(dbConnectionString));
 
-            services.AddAuthentication(AzureADB2CDefaults.AuthenticationScheme)
-               .AddAzureADB2C(options => Configuration.Bind("AzureAdB2C", options));
+            services.AddAuthentication(sharedOptions =>
+            {
+                sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                sharedOptions.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            })
+            .AddAzureAdB2C(options => Configuration.Bind("AzureAdB2C", options))
+            .AddCookie();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc();
+            services.AddDistributedMemoryCache();
 
             services.AddSession(options =>
             {
+                options.IdleTimeout = TimeSpan.FromHours(1);
+                options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
 
@@ -80,7 +92,6 @@ namespace HR_Project
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSession();
-            app.UseCookiePolicy();
 
             app.UseAuthentication();
 
