@@ -1,4 +1,5 @@
 ﻿@model ApplicationDetailsViewModel
+@using HR_Project.Enums
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -16,7 +17,10 @@
                         <span class="application-status @Model.ApplicationModel.StatusCssClass">@Html.DisplayFor(modelItem => Model.ApplicationModel.Status)</span> 
                     </p>
                 </div>
-                @Html.ActionLink("Send application", "Apply", new { id = Model.ApplicationModel.Id, isEditing = true }, new { @class = "btn button lightgreen" })
+                @if (Model.ApplicationModel.Status != ApplicationStatus.Approved && Model.ApplicationModel.Status != ApplicationStatus.Submitted)
+                {
+                    @Html.ActionLink("Send application", "Apply", new { id = Model.ApplicationModel.Id, isEditing = true }, new { @class = "btn button lightgreen" })
+                }
             </div>
             @if (Model.IsEditing == true)
             {
@@ -25,7 +29,10 @@
                 </div>
                 <div class="list-item-tertiary">
                     @Html.ActionLink("Cancel changes", "Index", "Application", null, new { @class = "btn button" })
-                    @Html.ActionLink("Delete application", "Delete", new { id = Model.ApplicationModel.Id }, new { @class = "btn button lightred" })
+                    @if (Model.ApplicationModel.Status == ApplicationStatus.Submitted)
+                    {
+                        @Html.ActionLink("Delete application", "Delete", new { id = Model.ApplicationModel.Id }, new { @class = "btn button lightred" })
+                    }
                 </div>
             }
             else
@@ -34,7 +41,10 @@
                 </div>
                 <div class="list-item-tertiary">
                     @Html.ActionLink("Edit application", "Details", new { id = Model.ApplicationModel.Id, isEditing = true }, new { @class = "btn button" })
-                    @Html.ActionLink("Delete application", "Delete", new { id = Model.ApplicationModel.Id }, new { @class = "btn button lightred" })
+                    @if (Model.ApplicationModel.Status == ApplicationStatus.Submitted)
+                    {
+                        @Html.ActionLink("Delete application", "Delete", new { id = Model.ApplicationModel.Id }, new { @class = "btn button lightred" })
+                    }
                 </div>
             }
         </div>
@@ -46,7 +56,10 @@
         <div class="list-item list-item-footer">
             <div class="list-item-primary">
                 @Html.ActionLink("Back", "Index", "Application", null, new { @class = "btn button button-back" })
-                @Html.ActionLink("Send application", "Apply", new { id = Model.ApplicationModel.Id, isEditing = true }, new { @class = "btn button lightgreen" })
+                @if (Model.ApplicationModel.Status != ApplicationStatus.Approved && Model.ApplicationModel.Status != ApplicationStatus.Submitted)
+                {
+                    @Html.ActionLink("Send application", "Apply", new { id = Model.ApplicationModel.Id, isEditing = true }, new { @class = "btn button lightgreen" })
+                }
             </div>
             @if (Model.IsEditing == true)
             {
@@ -55,7 +68,10 @@
                 </div>
                 <div class="list-item-tertiary">
                     @Html.ActionLink("Cancel changes", "Index", "Application", null, new { @class = "btn button" })
-                    @Html.ActionLink("Delete application", "Delete", new { id = Model.ApplicationModel.Id }, new { @class = "btn button lightred" })
+                    @if (Model.ApplicationModel.Status == ApplicationStatus.Submitted)
+                    {
+                        @Html.ActionLink("Delete application", "Delete", new { id = Model.ApplicationModel.Id }, new { @class = "btn button lightred" })
+                    }
                 </div>
             }
             else
@@ -64,7 +80,10 @@
                 </div>
                 <div class="list-item-tertiary">
                     @Html.ActionLink("Edit application", "Details", new { id = Model.ApplicationModel.Id, isEditing = true }, new { @class = "btn button" })
-                    @Html.ActionLink("Delete application", "Delete", new { id = Model.ApplicationModel.Id }, new { @class = "btn button lightred" })
+                    @if (Model.ApplicationModel.Status == ApplicationStatus.Submitted)
+                    {
+                        @Html.ActionLink("Delete application", "Delete", new { id = Model.ApplicationModel.Id }, new { @class = "btn button lightred" })
+                    }
                 </div>
             }
         </div>

@@ -31,8 +31,14 @@
                 @Html.ActionLink("Edit application", "Details", "Application", new { id = item.Id, isEditing = true }, new { @class = "btn button" })
             </div>
             <div class="list-item-tertiary">
-                @Html.ActionLink("Send application", "Apply", "Application", new { id = item.Id }, new { @class = "btn button lightgreen" })
-                @Html.ActionLink("Withdraw", "Delete", "Application", new { id = item.Id }, new { @class = "btn button lightred" })
+                @if (item.Status != ApplicationStatus.Approved && item.Status != ApplicationStatus.Submitted)
+                {
+                    @Html.ActionLink("Send application", "Apply", "Application", new { id = item.Id }, new { @class = "btn button lightgreen" })
+                }
+                @if (item.Status == ApplicationStatus.Submitted)
+                {
+                    @Html.ActionLink("Withdraw", "Delete", "Application", new { id = item.Id }, new { @class = "btn button lightred" })
+                }
             </div>
         }
     </div>

@@ -54,6 +54,7 @@ namespace HR_Project
 
             services.AddMvc();
             services.AddDistributedMemoryCache();
+            services.AddHttpContextAccessor();
 
             services.AddSession(options =>
             {

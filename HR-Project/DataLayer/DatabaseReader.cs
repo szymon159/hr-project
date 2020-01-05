@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.Internal;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace HR_Project.DataLayer
 {
@@ -35,10 +36,12 @@ namespace HR_Project.DataLayer
             model.Description = context.JobOffer.Where(jobOffer => jobOffer.IdJobOffer == model.Id).FirstOrDefault().Description;
         }
 
-        public static List<ApplicationViewModel> GetApplications(DataContext context, bool includeDetails = false)
+        public static List<ApplicationViewModel> GetApplications(DataContext context, string userExternalId = null, string userRole = null, bool includeDetails = false)
         {
             var result = new List<ApplicationViewModel>();
-            foreach(var application in context.Application)
+            var applications = GetApplicationsForUser(context, userExternalId, userRole);
+
+            foreach(var application in applications)
             {
                 var toAdd = new ApplicationViewModel
                 {
@@ -55,6 +58,23 @@ namespace HR_Project.DataLayer
             }
 
             return result;
+        }
+
+        private static IEnumerable<HR_Project_Database.Models.Application> GetApplicationsForUser(DataContext context, string userExternalId, string userRole)
+        {
+            if (userRole == UserRole.User.ToString())
+            {
+                return context.Application.Where(application => application.User.ExternalId == userExternalId);
+            }
+            else if (userRole == UserRole.HR.ToString())
+            {
+                //TODO: Implement
+                return null;
+            }
+            else
+            {
+                return context.Application;
+            }
         }
 
         public static void GetApplicationDetails(this ApplicationViewModel model, DataContext context)

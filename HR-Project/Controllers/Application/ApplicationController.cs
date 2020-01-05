@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using HR_Project.DataLayer;
+using HR_Project.ExtensionMethods;
 using HR_Project.ViewModels;
 using HR_Project_Database.EntityFramework;
 using HR_Project_Database.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HR_Project.Controllers.Application
 {
@@ -18,10 +22,14 @@ namespace HR_Project.Controllers.Application
         private readonly DataContext context;
         private static List<ApplicationViewModel> applications;
         
-        public ApplicationController(DataContext context)
+        public ApplicationController(IHttpContextAccessor contextAccessor, DataContext context)
         {
+            var user = contextAccessor.HttpContext.User;
+            var userExternalId = user.GetExternalId();
+            var userRole = user.GetRole();
+
             this.context = context;
-            applications = DatabaseReader.GetApplications(context);
+            applications = DatabaseReader.GetApplications(context, userExternalId, userRole);
         }
 
         public IActionResult Index()
@@ -32,8 +40,8 @@ namespace HR_Project.Controllers.Application
         [Authorize(Roles =("User"))]
         public async Task<ActionResult> Delete(int id)
         {
-            var toDelete = context.Application.Find(id);
-            if (toDelete != null)
+            var toDelete = context.Application.Include(x => x.User).FirstOrDefault(x => x.IdApplication == id);
+            if (toDelete != null && User.HasAccessToApplication(toDelete))
             {
                 toDelete.Status = ApplicationStatus.Withdrawn;
                 await context.SaveChangesAsync();
@@ -46,9 +54,16 @@ namespace HR_Project.Controllers.Application
         [Authorize(Roles = ("User, HR"))]
         public IActionResult Details(int id, bool isEditing)
         {
-            var baseModel = applications.Where(offer => offer.Id == id).FirstOrDefault();
+            var baseModel = applications.FirstOrDefault(application => application.Id == id);
+            
+            // If no first name is loaded it means we have to fetch details
             if (string.IsNullOrEmpty(baseModel.FirstName))
                 baseModel.GetApplicationDetails(context);
+
+            if (!User.HasAccessToApplication(baseModel, context))
+            {
+                return RedirectToAction("Index", "Application");
+            }
 
             var model = new ApplicationDetailsViewModel
             {
@@ -61,9 +76,9 @@ namespace HR_Project.Controllers.Application
         [Authorize(Roles = ("User"))]
         public async Task<ActionResult> Apply(int id)
         {
-            var toUpdate = context.Application.Find(id);
+            var toUpdate = context.Application.Include(x => x.User).FirstOrDefault(x => x.IdApplication == id);
 
-            if(toUpdate?.Status == ApplicationStatus.Undefined)
+            if (toUpdate?.Status == ApplicationStatus.Draft && User.HasAccessToApplication(toUpdate))
             {
                 toUpdate.Status = ApplicationStatus.Submitted;
                 await context.SaveChangesAsync();
@@ -77,11 +92,11 @@ namespace HR_Project.Controllers.Application
         public async Task<ActionResult> Save(int id, ApplicationDetailsViewModel viewModel)
         {
             // Find application to update in DB
-            var toUpdate = context.Application.Find(id);
-            if(toUpdate == null)
+            var toUpdate = context.Application.Include(x => x.User).FirstOrDefault(x => x.IdApplication == id);
+            if(toUpdate == null || !User.HasAccessToApplication(toUpdate))
                 return RedirectToAction("Index", "Application");
 
-            if(toUpdate.Status != ApplicationStatus.Undefined)
+            if(toUpdate.Status != ApplicationStatus.Draft)
             {
                 // If application was already submitted, withdraw it
                 toUpdate.Status = ApplicationStatus.Withdrawn;
@@ -95,7 +110,7 @@ namespace HR_Project.Controllers.Application
                     Cvid = toUpdate.Cvid,
                     AttachmentGroupId = toUpdate.AttachmentGroupId,
                     ApplicationMessageId = toUpdate.ApplicationMessageId,
-                    Status = ApplicationStatus.Undefined
+                    Status = ApplicationStatus.Draft
                 };
 
                 context.Application.Add(newModel);
