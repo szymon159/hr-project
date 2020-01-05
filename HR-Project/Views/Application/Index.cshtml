@@ -22,22 +22,32 @@
             </div>
             @if (User.Identity.IsAuthenticated && !User.IsInRole(UserRole.Admin))
             {
-                @Html.ActionLink("View Details", "Details", "Application", new { id = item.Id, isEditing = false }, new { @class = "btn button" })
+                @Html.ActionLink("View Details", "Details", "Application", new { id = item.Id, isEditing = false }, new { @class = "btn button list-item-button" })
             }
         </div>
-        @if (User.Identity.IsAuthenticated && User.IsInRole(UserRole.User))
+        @if (User.IsInRole(UserRole.User))
         {
             <div class="list-item-secondary">
-                @Html.ActionLink("Edit application", "Details", "Application", new { id = item.Id, isEditing = true }, new { @class = "btn button" })
+                @Html.ActionLink("Edit application", "Details", "Application", new { id = item.Id, isEditing = true }, new { @class = "btn button list-item-button" })
             </div>
             <div class="list-item-tertiary">
                 @if (item.Status != ApplicationStatus.Approved && item.Status != ApplicationStatus.Submitted)
                 {
-                    @Html.ActionLink("Send application", "Apply", "Application", new { id = item.Id }, new { @class = "btn button lightgreen" })
+                    @Html.ActionLink("Send application", "Apply", "Application", new { id = item.Id }, new { @class = "btn button list-item-button lightgreen" })
                 }
                 @if (item.Status == ApplicationStatus.Submitted)
                 {
-                    @Html.ActionLink("Withdraw", "Delete", "Application", new { id = item.Id }, new { @class = "btn button lightred" })
+                    @Html.ActionLink("Withdraw", "Delete", "Application", new { id = item.Id }, new { @class = "btn button list-item-button lightred" })
+                }
+            </div>
+        }
+        else if(User.IsInRole(UserRole.HR))
+        {
+            <div class="list-item-tertiary">
+                @if (item.Status != ApplicationStatus.Draft && item.Status != ApplicationStatus.Withdrawn)
+                {
+                    @Html.ActionLink("Approve application", "Approve", "Application", new { id = item.Id }, new { @class = "btn button list-item-button lightgreen" })
+                    @Html.ActionLink("Reject application", "Reject", "Application", new { id = item.Id }, new { @class = "btn button list-item-button lightred" })
                 }
             </div>
         }

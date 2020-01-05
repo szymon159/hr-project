@@ -164,5 +164,80 @@ namespace HR_Project.Controllers.Application
 
             return RedirectToAction("Details", new { id = id, isEditing = true });
         }
+
+        [Authorize(Roles = ("HR"))]
+        public async Task<ActionResult> Approve(int id)
+        {
+            var toApprove = context.Application
+                .Include(x => x.User)
+                .Include(x => x.JobOffer.Responsibility)
+                .FirstOrDefault(x => x.IdApplication == id);
+            
+            if (toApprove != null
+                && User.HasAccessToApplication(toApprove)
+                && toApprove.Status != ApplicationStatus.Draft
+                && toApprove.Status != ApplicationStatus.Withdrawn)
+            {
+                toApprove.Status = ApplicationStatus.Approved;
+                await context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index", "Application");
+        }
+
+        [Authorize(Roles = ("HR"))]
+        public async Task<ActionResult> Reject(int id)
+        {
+            var toReject = context.Application
+                .Include(x => x.User)
+                .Include(x => x.JobOffer.Responsibility)
+                .FirstOrDefault(x => x.IdApplication == id);
+            
+            if (toReject != null 
+                && User.HasAccessToApplication(toReject)
+                && toReject.Status != ApplicationStatus.Draft 
+                && toReject.Status != ApplicationStatus.Withdrawn)
+            {
+                toReject.Status = ApplicationStatus.Rejected;
+                await context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index", "Application");
+        }
+
+        public async Task<FileContentResult> DownloadCv(int id)
+        {
+            var application = context.Application
+                .Include(x => x.User)
+                .Include(x => x.JobOffer.Responsibility)
+                .FirstOrDefault(x => x.IdApplication == id);
+
+            string fileName = application.Cvid.ToString() + ".pdf";
+            byte[] fileContent = null;
+            string contentType = null;
+            if (User.HasAccessToApplication(application))
+            {
+                (fileContent, contentType) = await StorageContext.DownloadCVFileAsync(application.Cvid);
+            }
+
+            return new FileContentResult(fileContent, contentType) { FileDownloadName = fileName };
+        }
+
+        public async Task<FileContentResult> DownloadAttachment(int id, string filePath)
+        {
+            var application = context.Application
+                .Include(x => x.User)
+                .Include(x => x.JobOffer.Responsibility)
+                .FirstOrDefault(x => x.IdApplication == id);
+
+            byte[] fileContent = null;
+            string contentType = null;
+            if (User.HasAccessToApplication(application))
+            {
+                (fileContent, contentType) = await StorageContext.DownloadAttachmentAsync(filePath);
+            }
+
+            return new FileContentResult(fileContent, contentType) { FileDownloadName = filePath };
+        }
     }
 }

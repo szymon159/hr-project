@@ -32,24 +32,23 @@ namespace HR_Project.DataLayer
             attachmentContainerClient = blobServiceClient.GetBlobContainerClient(attachmentContainerName);
         }
 
-        //public static async Task<IFormFile> DownloadCVFileAsync(int cvId)
-        //{
-        //    if (string.IsNullOrEmpty(storageConnectionString))
-        //        throw new ApplicationException("Connection string to Blob Storage not provided");
+        public static async Task<(byte[], string)> DownloadCVFileAsync(int cvId)
+        {
+            if (string.IsNullOrEmpty(storageConnectionString))
+                throw new ApplicationException("Connection string to Blob Storage not provided");
 
+            var blobName = cvId.ToString() + ".pdf";
 
-        //    var blobName = cvId.ToString() + ".pdf";
-        //    BlobClient blobClient = containerClient.GetBlobClient(blobName);
+            return await DownloadFileAsync(cvContainerClient, blobName);
+        }
 
-        //    BlobDownloadInfo download = await blobClient.DownloadAsync();
-        //    if (download.Content == Stream.Null)
-        //        throw new ApplicationException("No file found on server");
+        public static async Task<(byte[], string)> DownloadAttachmentAsync(string attachmentPath)
+        {
+            if (string.IsNullOrEmpty(storageConnectionString))
+                throw new ApplicationException("Connection string to Blob Storage not provided");
 
-        //    Stream stream = new Stream();
-        //    await download.Content.CopyToAsync(stream);
-
-        //    return new FormFile(download.Content, 0, download.ContentLength, "CV", blobName);
-        //}
+            return await DownloadFileAsync(attachmentContainerClient, attachmentPath);
+        }
 
         public static void UploadCVFile(int cvId, IFormFile file, bool overrideFile = false)
         {
@@ -95,6 +94,25 @@ namespace HR_Project.DataLayer
                 }
                 i++;
             }
+        }
+
+        private static async Task<(byte[], string)> DownloadFileAsync(BlobContainerClient containerClient, string blobName)
+        {
+            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+
+            BlobDownloadInfo download = await blobClient.DownloadAsync();
+            if (download.Content == Stream.Null)
+                throw new ApplicationException("No file found on server");
+
+            byte[] result;
+            using (MemoryStream downloadFileStream = new MemoryStream())
+            {
+                await download.Content.CopyToAsync(downloadFileStream);
+                result = downloadFileStream.ToArray();
+                downloadFileStream.Close();
+            }
+
+            return (result, download.ContentType);
         }
     }
 }

@@ -18,15 +18,15 @@
                         <span class="joboffer-status @item.StatusCssClass">@Html.DisplayFor(modelItem => item.Status)</span>
                     </p>
                 </div>
-                @Html.ActionLink("View Details", "Details", "JobOffer", new { id = item.Id, isEditing = false }, new { @class = "btn button" })
+                @Html.ActionLink("View Details", "Details", "JobOffer", new { id = item.Id, isEditing = false }, new { @class = "btn button list-item-button" })
             </div>
             <div class="list-item-secondary">
                 @*TODO: When search algorythm is implemented and connected to DB add some restrictions*@
-                @Html.ActionLink("View Applications", "Index", "Application", null, new { @class = "btn button" })
+                @Html.ActionLink("View Applications", "Index", "Application", null, new { @class = "btn button list-item-button" })
             </div>
             <div class="list-item-tertiary">
-                @Html.ActionLink("Edit Offer", "Details", new { id = item.Id, isEditing = true }, new { @class = "btn button" })
-                @Html.ActionLink("Delete Offer", "Delete", new { id = item.Id }, new { @class = "btn button lightred" })
+                @Html.ActionLink("Edit Offer", "Details", new { id = item.Id, isEditing = true }, new { @class = "btn button list-item-button" })
+                @Html.ActionLink("Delete Offer", "Delete", new { id = item.Id }, new { @class = "btn button list-item-button lightred" })
             </div>
         </div>
     }

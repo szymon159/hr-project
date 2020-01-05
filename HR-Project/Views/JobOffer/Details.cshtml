@@ -21,18 +21,18 @@
             @if (Model.IsEditing == true)
             {
                 <div class="list-item-secondary">
-                    <input type="submit" class = "btn button lightgreen" value="Save changes" />
+                    <input type="submit" class = "btn button list-item-button lightgreen" value="Save changes" />
                 </div>
                 <div class="list-item-tertiary">
-                    @Html.ActionLink("Cancel changes", "Index", "JobOffer", null, new { @class = "btn button" })
-                    @Html.ActionLink("Delete Offer", "Delete", new { id = Model.JobOfferModel.Id }, new { @class = "btn button lightred" })
+                    @Html.ActionLink("Cancel changes", "Index", "JobOffer", null, new { @class = "btn button list-item-button" })
+                    @Html.ActionLink("Delete Offer", "Delete", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightred" })
                 </div>
             }
             else
             {
                 <div class="list-item-tertiary">
-                    @Html.ActionLink("Edit Offer", "Details", new { id = Model.JobOfferModel.Id, isEditing = true }, new { @class = "btn button" })
-                    @Html.ActionLink("Delete Offer", "Delete", new { id = Model.JobOfferModel.Id }, new { @class = "btn button lightred" })
+                    @Html.ActionLink("Edit Offer", "Details", new { id = Model.JobOfferModel.Id, isEditing = true }, new { @class = "btn button list-item-button" })
+                    @Html.ActionLink("Delete Offer", "Delete", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightred" })
                 </div>
             }
         </div>
@@ -48,23 +48,23 @@
         </div>
         <div class="list-item list-item-footer">
             <div class="list-item-primary">
-                @Html.ActionLink("Back", "Index", "JobOffer", null, new { @class = "btn button button-back" })
+                @Html.ActionLink("Back", "Index", "JobOffer", null, new { @class = "btn button list-item-button list-item-button button-back" })
             </div>
             @if (Model.IsEditing == true)
             {
                 <div class="list-item-secondary">
-                    <input type="submit" class = "btn button lightgreen" value="Save changes" />
+                    <input type="submit" class = "btn button list-item-button lightgreen" value="Save changes" />
                 </div>
                 <div class="list-item-tertiary">
-                    @Html.ActionLink("Cancel changes", "Index", "JobOffer", null, new { @class = "btn button" })
-                    @Html.ActionLink("Delete Offer", "Delete", new { id = Model.JobOfferModel.Id }, new { @class = "btn button lightred" })
+                    @Html.ActionLink("Cancel changes", "Index", "JobOffer", null, new { @class = "btn button list-item-button" })
+                    @Html.ActionLink("Delete Offer", "Delete", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightred" })
                 </div>
             }
             else
             {
                 <div class="list-item-tertiary">
-                    @Html.ActionLink("Edit Offer", "Details", new { id = Model.JobOfferModel.Id, isEditing = true }, new { @class = "btn button" })
-                    @Html.ActionLink("Delete Offer", "Delete", new { id = Model.JobOfferModel.Id }, new { @class = "btn button lightred" })
+                    @Html.ActionLink("Edit Offer", "Details", new { id = Model.JobOfferModel.Id, isEditing = true }, new { @class = "btn button list-item-button" })
+                    @Html.ActionLink("Delete Offer", "Delete", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightred" })
                 </div>
             }
         </div>

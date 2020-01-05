@@ -1,4 +1,7 @@
-﻿@model ApplicationDetailsViewModel
+﻿@using HR_Project.Enums
+@using HR_Project.ExtensionMethods
+
+@model ApplicationDetailsViewModel
 
 <div class="application-property">
     <p class="application-property-label">First name:</p>
@@ -17,28 +20,47 @@
 
 <div class="application-property">
     <p class="application-property-label">CV - file:</p>
-    @if (Model.ApplicationModel.IsCvUploaded)
+    @if (User.IsInRole(UserRole.User))
     {
-        <p class="application-property-sublabel">(Already uploaded, choosing new file will replace old one)</p>
+        @if (Model.ApplicationModel.IsCvUploaded)
+        {
+            <p class="application-property-sublabel">(Already uploaded, choosing new file will replace old one)</p>
+        }
+        @Html.TextBoxFor(modelItem => Model.ApplicationModel.CV, new { @type = "file", @readonly = "true", @class = "application-property-edit" })
     }
-    @Html.TextBoxFor(modelItem => Model.ApplicationModel.CV, new { @type = "file", @readonly = "true", @class = "application-property-edit" })
+    else if (User.IsInRole(UserRole.HR))
+    {
+        <ul class="application-property-edit">
+            <li class="file-list-item">
+                @Html.DisplayTextFor(modelItem => Model.ApplicationModel.UploadedCvPath)
+                @Html.ActionLink("Download", "DownloadCv", "Application", new { id = Model.ApplicationModel.Id } , new { @class = "btn button download-file-button" })
+            </li>
+        </ul>
+    }
 </div>
 
 <div class="application-property">
     <p class="application-property-label">Other attachments:</p>
-    @if (Model.ApplicationModel.IsAttachmentsUploaded)
+    @if (User.IsInRole(UserRole.User))
     {
-        <p class="application-property-sublabel">(Already uploaded, selecting new file will replace all previously uploaded)</p>
+        @if (Model.ApplicationModel.IsAttachmentsUploaded)
+        {
+            <p class="application-property-sublabel">(Already uploaded, selecting new file will replace all previously uploaded)</p>
+        }
+        @Html.TextBoxFor(modelItem => Model.ApplicationModel.OtherAttachments, new { @type = "file", @readonly = "true", @multiple = "true", @class = "application-property-edit" })
     }
-    @Html.TextBoxFor(modelItem => Model.ApplicationModel.OtherAttachments, new { @type = "file", @readonly = "true", @multiple = "true", @class = "application-property-edit" })
-    @*@if (Model.IsEditing == true)
+    else if (User.IsInRole(UserRole.HR))
     {
-        @Html.TextBoxFor(modelItem => Model.ApplicationModel.OtherAttachments, new { @placeholder = "Attachments", @class = "application-property-edit" })
+        <ul class="application-property-edit">
+            @foreach(var attachmentPath in Model.ApplicationModel.UploadedAttachmentPaths)
+            {
+                <li class="file-list-item">
+                @Html.DisplayTextFor(modelItem => attachmentPath)
+                @Html.ActionLink("Download", "DownloadAttachment", "Application", new { id = Model.ApplicationModel.Id, filePath = attachmentPath }, new { @class = "btn button download-file-button" })
+                </li>
+            }
+        </ul>
     }
-    else
-    {
-        @Html.TextBoxFor(modelItem => Model.ApplicationModel.OtherAttachments, new { @readonly = "true", @placeholder = "Attachments", @class = "application-property-edit" })
-    }*@
 </div>
 
 <div class="application-property">

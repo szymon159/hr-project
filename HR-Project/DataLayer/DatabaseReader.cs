@@ -64,31 +64,34 @@ namespace HR_Project.DataLayer
         {
             if (userRole == UserRole.User.ToString())
             {
-                return context.Application.Where(application => application.User.ExternalId == userExternalId);
+                return context.Application
+                    .Where(application => application.User.ExternalId == userExternalId);
             }
             else if (userRole == UserRole.HR.ToString())
             {
                 // Select Applications for JobOffers which are managed by user with requested userExternalId
                 return context.Responsibility.Where(responsibility => responsibility.User.ExternalId == userExternalId)
-                    .SelectMany(responsibility => responsibility.JobOffer.Application);
+                    .SelectMany(responsibility => responsibility.JobOffer.Application)
+                    .Where(application => application.Status != HR_Project_Database.Models.ApplicationStatus.Draft);
             }
             else
             {
-                return context.Application;
+                return context.Application
+                    .Where(application => application.Status != HR_Project_Database.Models.ApplicationStatus.Draft);
             }
         }
 
         public static void GetApplicationDetails(this ApplicationViewModel model, DataContext context)
         {
-            var application = context.Application.Find(model.Id);
-            var user = context.User.Find(application.UserId);
-            var attachments = context.Attachment.Where(attachment => attachment.AttachmentGroupId == application.AttachmentGroupId);
+            var application = context.Application.Include(x => x.User).FirstOrDefault(app => app.IdApplication == model.Id);
+            var attachments = context.Attachment.Where(attachment => attachment.AttachmentGroupId == application.AttachmentGroupId)
+                .Select(attachment => attachment.IdAttachment.ToString() + attachment.Extension);
 
-            model.FirstName = user.FirstName;
-            model.LastName = user.LastName;
-            model.Email = user.Email;
-            model.IsCvUploaded = true;
-            model.IsAttachmentsUploaded = attachments != null && attachments.Count() > 0;
+            model.FirstName = application.User.FirstName;
+            model.LastName = application.User.LastName;
+            model.Email = application.User.Email;
+            model.UploadedCvPath = application.Cvid.ToString() + ".pdf";
+            model.UploadedAttachmentPaths = attachments.ToList();
             model.Message = context.ApplicationMessage.Find(application.ApplicationMessageId)?.MessageContent;
         }
     }

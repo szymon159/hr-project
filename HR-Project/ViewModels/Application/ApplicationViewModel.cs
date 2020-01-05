@@ -20,11 +20,13 @@ namespace HR_Project.ViewModels
 
         public string Email { get; set; }
 
+        public bool IsCvUploaded => !string.IsNullOrEmpty(UploadedCvPath);
         public IFormFile CV { get; set; }
-        public bool IsCvUploaded { get; set; }
+        public string UploadedCvPath { get; set; }
 
+        public bool IsAttachmentsUploaded => UploadedAttachmentPaths != null && UploadedAttachmentPaths.Count > 0;
         public List<IFormFile> OtherAttachments { get; set; }
-        public bool IsAttachmentsUploaded { get; set; }
+        public List<string> UploadedAttachmentPaths { get; set; }
 
         public string Message { get; set; }
 
