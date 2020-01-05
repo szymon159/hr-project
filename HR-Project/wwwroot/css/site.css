@@ -274,7 +274,6 @@ h1 {
     font-style: italic;
     font-size: 12px;
     margin-top: -6px;
-    color: var(--green-text-color);
 }
 
 .application-property-edit {
@@ -329,4 +328,12 @@ h1 {
 
 .lightgreen {
     background-color: var(--light-green-button-color);
+}
+
+.red-text {
+    color: var(--red-text-color);
+}
+
+.green-text {
+    color: var(--green-text-color);
 }

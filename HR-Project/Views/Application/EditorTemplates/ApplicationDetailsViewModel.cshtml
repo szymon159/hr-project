@@ -24,17 +24,21 @@
     {
         @if (Model.ApplicationModel.IsCvUploaded)
         {
-            <p class="application-property-sublabel">(Already uploaded, choosing new file will replace old one)</p>
+            <p class="application-property-sublabel green-text">(Already uploaded, choosing new file will replace old one)</p>
+        }
+        else
+        {
+            <p class="application-property-sublabel red-text">(CV is not uploaded - add it or you will not be able to Submit/Apply)</p>
         }
         @Html.TextBoxFor(modelItem => Model.ApplicationModel.CV, new { @type = "file", @readonly = "true", @class = "application-property-edit" })
     }
-    else if (User.IsInRole(UserRole.HR) 
+    else if (User.IsInRole(UserRole.HR)
         && Model.ApplicationModel.IsCvUploaded)
     {
         <ul class="application-property-edit">
             <li class="file-list-item">
                 @Html.DisplayTextFor(modelItem => Model.ApplicationModel.UploadedCvPath)
-                @Html.ActionLink("Download", "DownloadCv", "Application", new { id = Model.ApplicationModel.Id } , new { @class = "btn button download-file-button" })
+                @Html.ActionLink("Download", "DownloadCv", "Application", new { id = Model.ApplicationModel.Id }, new { @class = "btn button download-file-button" })
             </li>
         </ul>
     }
@@ -46,7 +50,7 @@
     {
         @if (Model.ApplicationModel.IsAttachmentsUploaded)
         {
-            <p class="application-property-sublabel">(Already uploaded, selecting new file will replace all previously uploaded)</p>
+            <p class="application-property-sublabel green-text">(Already uploaded, selecting new file will replace all previously uploaded)</p>
         }
         @Html.TextBoxFor(modelItem => Model.ApplicationModel.OtherAttachments, new { @type = "file", @readonly = "true", @multiple = "true", @class = "application-property-edit" })
     }

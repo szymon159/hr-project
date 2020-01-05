@@ -78,7 +78,11 @@ namespace HR_Project.Controllers.Application
         {
             var toUpdate = context.Application.Include(x => x.User).FirstOrDefault(x => x.IdApplication == id);
 
-            if (toUpdate?.Status == ApplicationStatus.Draft && User.HasAccessToApplication(toUpdate))
+            if(toUpdate.CvId == null)
+                return RedirectToAction("Details", new { id = id, isEditing = true });
+
+            if (toUpdate?.Status == ApplicationStatus.Draft 
+                && User.HasAccessToApplication(toUpdate))
             {
                 toUpdate.Status = ApplicationStatus.Submitted;
                 await context.SaveChangesAsync();
