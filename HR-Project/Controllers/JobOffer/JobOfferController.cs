@@ -47,6 +47,23 @@ namespace HR_Project.Controllers
             return RedirectToAction("Index", "JobOffer");
         }
 
+        [Authorize(Roles = ("HR, Admin"))]
+        public async Task<ActionResult> Activate(int id)
+        {
+            var toActivate = context.JobOffer
+                .Include(x => x.Responsibility)
+                .ThenInclude(x => x.User)
+                .FirstOrDefault(jobOffer => jobOffer.IdJobOffer == id);
+
+            if (toActivate != null && User.CanManageJobOffer(toActivate))
+            {
+                toActivate.Status = HR_Project_Database.Models.JobOfferStatus.Active;
+                await context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index", "JobOffer");
+        }
+
         public IActionResult Details(int id, bool isEditing)
         {
             var baseModel = jobOffers.Where(offer => offer.Id == id).FirstOrDefault();

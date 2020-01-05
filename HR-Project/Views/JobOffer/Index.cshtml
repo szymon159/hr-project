@@ -33,7 +33,14 @@
                 @if (User.CanManageJobOffer(item))
                 {
                     @Html.ActionLink("Edit Offer", "Details", new { id = item.Id, isEditing = true }, new { @class = "btn button list-item-button" })
-                    @Html.ActionLink("Delete Offer", "Delete", new { id = item.Id }, new { @class = "btn button list-item-button lightred" })
+                    @if(item.Status == JobOfferStatus.Active)
+                    {
+                        @Html.ActionLink("Delete Offer", "Delete", new { id = item.Id }, new { @class = "btn button list-item-button lightred" })
+                    }
+                    else if(item.Status == JobOfferStatus.Inactive)
+                    {
+                        @Html.ActionLink("Activate Offer", "Activate", new { id = item.Id }, new { @class = "btn button list-item-button lightgreen" })
+                    }
                 }
                 else if(User.IsInRole(UserRole.User)
                     && item.Status == JobOfferStatus.Active)
