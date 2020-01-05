@@ -91,7 +91,7 @@ namespace HR_Project.DataLayer
             model.FirstName = application.User.FirstName;
             model.LastName = application.User.LastName;
             model.Email = application.User.Email;
-            model.UploadedCvPath = application.Cvid.ToString() + ".pdf";
+            model.UploadedCvPath = application.CvId == null ? null : application.CvId.ToString() + ".pdf";
             model.UploadedAttachmentPaths = attachments.ToList();
             model.Message = context.ApplicationMessage.Find(application.ApplicationMessageId)?.MessageContent;
         }

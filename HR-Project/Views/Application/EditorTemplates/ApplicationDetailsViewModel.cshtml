@@ -28,7 +28,8 @@
         }
         @Html.TextBoxFor(modelItem => Model.ApplicationModel.CV, new { @type = "file", @readonly = "true", @class = "application-property-edit" })
     }
-    else if (User.IsInRole(UserRole.HR))
+    else if (User.IsInRole(UserRole.HR) 
+        && Model.ApplicationModel.IsCvUploaded)
     {
         <ul class="application-property-edit">
             <li class="file-list-item">

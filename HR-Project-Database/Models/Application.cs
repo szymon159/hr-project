@@ -8,7 +8,7 @@ namespace HR_Project_Database.Models
         public int IdApplication { get; set; }
         public int JobOfferId { get; set; }
         public int UserId { get; set; }
-        public int Cvid { get; set; }
+        public Guid? CvId { get; set; }
         public int? AttachmentGroupId { get; set; }
         public int? ApplicationMessageId { get; set; }
         public ApplicationStatus Status { get; set; }

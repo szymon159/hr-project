@@ -24,6 +24,7 @@ namespace HR_Project_Database.EntityFramework
         public virtual DbSet<Responsibility> Responsibility { get; set; }
         public virtual DbSet<User> User { get; set; }
 
+        // TODO: Update this method to use data making sense :)
         public void InitializeFakeData()
         {
             var jobOffers = new JobOffer[]
@@ -46,11 +47,11 @@ namespace HR_Project_Database.EntityFramework
 
             var applications = new Application[]
             {
-                new Application{JobOfferId = 1, UserId = 1, Cvid = 1, Status=ApplicationStatus.Approved},
-                new Application{JobOfferId = 2, UserId = 1, Cvid = 1, Status=ApplicationStatus.Rejected},
-                new Application{JobOfferId = 3, UserId = 1, Cvid = 1, Status=ApplicationStatus.Submitted},
-                new Application{JobOfferId = 4, UserId = 1, Cvid = 1, Status=ApplicationStatus.Submitted},
-                new Application{JobOfferId = 5, UserId = 1, Cvid = 1, Status=ApplicationStatus.Submitted},
+                new Application{JobOfferId = 1, UserId = 1, CvId = null, Status=ApplicationStatus.Approved},
+                new Application{JobOfferId = 2, UserId = 1, CvId = null, Status=ApplicationStatus.Rejected},
+                new Application{JobOfferId = 3, UserId = 1, CvId = null, Status=ApplicationStatus.Submitted},
+                new Application{JobOfferId = 4, UserId = 1, CvId = null, Status=ApplicationStatus.Submitted},
+                new Application{JobOfferId = 5, UserId = 1, CvId = null, Status=ApplicationStatus.Submitted},
             };
             Application.AddRange(applications);
             SaveChanges();
@@ -64,7 +65,7 @@ namespace HR_Project_Database.EntityFramework
 
                 entity.Property(e => e.IdApplication).HasColumnName("Id_Application");
 
-                entity.Property(e => e.Cvid).HasColumnName("CVId");
+                entity.Property(e => e.CvId).HasColumnName("CVId");
 
                 entity.Property(e => e.Status).HasColumnName("Status");
 
