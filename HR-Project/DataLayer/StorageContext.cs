@@ -32,7 +32,7 @@ namespace HR_Project.DataLayer
             attachmentContainerClient = blobServiceClient.GetBlobContainerClient(attachmentContainerName);
         }
 
-        public static async Task<(byte[], string)> DownloadCVFileAsync(int cvId)
+        public static async Task<(byte[], string)> DownloadCVFileAsync(Guid cvId)
         {
             if (string.IsNullOrEmpty(storageConnectionString))
                 throw new ApplicationException("Connection string to Blob Storage not provided");
@@ -50,7 +50,7 @@ namespace HR_Project.DataLayer
             return await DownloadFileAsync(attachmentContainerClient, attachmentPath);
         }
 
-        public static void UploadCVFile(int cvId, IFormFile file, bool overrideFile = false)
+        public static void UploadCVFile(Guid cvId, IFormFile file, bool overrideFile = false)
         {
             if (string.IsNullOrEmpty(storageConnectionString))
                 throw new ApplicationException("Connection string to Blob Storage not provided");
@@ -68,7 +68,7 @@ namespace HR_Project.DataLayer
             }
         }
 
-        public static void ReplaceCVFile(int cvId, IFormFile file)
+        public static void ReplaceCVFile(Guid cvId, IFormFile file)
         {
             UploadCVFile(cvId, file, true);
         }

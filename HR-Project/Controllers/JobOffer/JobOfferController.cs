@@ -87,7 +87,7 @@ namespace HR_Project.Controllers
             {
                 JobOfferId = jobOffer.IdJobOffer,
                 UserId = User.GetId(context),
-                Cvid = 1, //TODO: allow adding application without CV
+                CvId = null,
                 Status = HR_Project_Database.Models.ApplicationStatus.Draft
             };
 

@@ -78,7 +78,11 @@ namespace HR_Project.Controllers.Application
         {
             var toUpdate = context.Application.Include(x => x.User).FirstOrDefault(x => x.IdApplication == id);
 
-            if (toUpdate?.Status == ApplicationStatus.Draft && User.HasAccessToApplication(toUpdate))
+            if(toUpdate.CvId == null)
+                return RedirectToAction("Details", new { id = id, isEditing = true });
+
+            if (toUpdate?.Status == ApplicationStatus.Draft 
+                && User.HasAccessToApplication(toUpdate))
             {
                 toUpdate.Status = ApplicationStatus.Submitted;
                 await context.SaveChangesAsync();
@@ -107,7 +111,7 @@ namespace HR_Project.Controllers.Application
                 {
                     JobOfferId = toUpdate.JobOfferId,
                     UserId = toUpdate.UserId,
-                    Cvid = toUpdate.Cvid,
+                    CvId = toUpdate.CvId,
                     AttachmentGroupId = toUpdate.AttachmentGroupId,
                     ApplicationMessageId = toUpdate.ApplicationMessageId,
                     Status = ApplicationStatus.Draft
@@ -122,7 +126,14 @@ namespace HR_Project.Controllers.Application
             // If file with CV is selected, replace file in storage
             if (viewModel.ApplicationModel.CV != null && viewModel.ApplicationModel.CV?.Length != 0)
             {
-                StorageContext.ReplaceCVFile(toUpdate.Cvid, viewModel.ApplicationModel.CV);
+                // If no file in storage, generate new id for CV
+                if (toUpdate.CvId == null)
+                {
+                    toUpdate.CvId = Guid.NewGuid();
+                    await context.SaveChangesAsync();
+                }
+
+                StorageContext.ReplaceCVFile(toUpdate.CvId.Value, viewModel.ApplicationModel.CV);
             }
 
             // If new attachments are selected, add them to DB (creating new AttachmentGroup) and storage
@@ -212,12 +223,12 @@ namespace HR_Project.Controllers.Application
                 .Include(x => x.JobOffer.Responsibility)
                 .FirstOrDefault(x => x.IdApplication == id);
 
-            string fileName = application.Cvid.ToString() + ".pdf";
+            string fileName = application.CvId.ToString() + ".pdf";
             byte[] fileContent = null;
             string contentType = null;
-            if (User.HasAccessToApplication(application))
+            if (User.HasAccessToApplication(application) &&  application.CvId != null)
             {
-                (fileContent, contentType) = await StorageContext.DownloadCVFileAsync(application.Cvid);
+                (fileContent, contentType) = await StorageContext.DownloadCVFileAsync(application.CvId.Value);
             }
 
             return new FileContentResult(fileContent, contentType) { FileDownloadName = fileName };
