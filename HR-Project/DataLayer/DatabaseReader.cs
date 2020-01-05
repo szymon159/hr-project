@@ -68,8 +68,9 @@ namespace HR_Project.DataLayer
             }
             else if (userRole == UserRole.HR.ToString())
             {
-                //TODO: Implement
-                return null;
+                // Select Applications for JobOffers which are managed by user with requested userExternalId
+                return context.Responsibility.Where(responsibility => responsibility.User.ExternalId == userExternalId)
+                    .SelectMany(responsibility => responsibility.JobOffer.Application);
             }
             else
             {

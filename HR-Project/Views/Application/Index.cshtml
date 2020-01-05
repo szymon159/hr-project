@@ -20,12 +20,12 @@
                     <span class="application-status @item.StatusCssClass">@Html.DisplayFor(modelItem => item.Status)</span>
                 </p>
             </div>
-            @if (User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
+            @if (User.Identity.IsAuthenticated && !User.IsInRole(UserRole.Admin))
             {
                 @Html.ActionLink("View Details", "Details", "Application", new { id = item.Id, isEditing = false }, new { @class = "btn button" })
             }
         </div>
-        @if (User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
+        @if (User.Identity.IsAuthenticated && User.IsInRole(UserRole.User))
         {
             <div class="list-item-secondary">
                 @Html.ActionLink("Edit application", "Details", "Application", new { id = item.Id, isEditing = true }, new { @class = "btn button" })
