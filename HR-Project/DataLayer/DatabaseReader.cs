@@ -17,13 +17,14 @@ namespace HR_Project.DataLayer
         public static List<JobOfferViewModel> GetJobOffers(DataContext context, bool includeDetails = false)
         {
             var result = new List<JobOfferViewModel>();
-            foreach(var joboffer in context.JobOffer)
+            foreach (var joboffer in context.JobOffer.Include(x => x.Responsibility).ThenInclude(x => x.User))
             {
                 result.Add(new JobOfferViewModel
                 {
                     Id = joboffer.IdJobOffer,
                     JobTitle = joboffer.JobTitle,
                     Description = includeDetails ? joboffer.Description : null,
+                    ResponsibleExternalIds = joboffer.Responsibility.Select(x => x.User.ExternalId).ToList(),
                     Status = (JobOfferStatus)Enum.Parse(typeof(JobOfferStatus), joboffer.Status.ToString())
                 });
             }

@@ -1,4 +1,7 @@
-﻿@model JobOfferDetailsViewModel
+﻿@using HR_Project.Enums;
+@using HR_Project.ExtensionMethods
+
+@model JobOfferDetailsViewModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Details";
@@ -18,26 +21,32 @@
                     </p>
                 </div>
             </div>
-            @if (Model.IsEditing == true)
+            @if (Model.IsEditing == true && User.CanManageJobOffer(Model.JobOfferModel))
             {
                 <div class="list-item-secondary">
-                    <input type="submit" class = "btn button list-item-button lightgreen" value="Save changes" />
+                    <input type="submit" class="btn button list-item-button lightgreen" value="Save changes" />
                 </div>
                 <div class="list-item-tertiary">
                     @Html.ActionLink("Cancel changes", "Index", "JobOffer", null, new { @class = "btn button list-item-button" })
                     @Html.ActionLink("Delete Offer", "Delete", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightred" })
                 </div>
             }
-            else
+            else if(User.CanManageJobOffer(Model.JobOfferModel))
             {
                 <div class="list-item-tertiary">
                     @Html.ActionLink("Edit Offer", "Details", new { id = Model.JobOfferModel.Id, isEditing = true }, new { @class = "btn button list-item-button" })
                     @Html.ActionLink("Delete Offer", "Delete", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightred" })
                 </div>
             }
+            else if(User.IsInRole(UserRole.User) && Model.JobOfferModel.Status == JobOfferStatus.Active)
+            {
+                <div class="list-item-tertiary">
+                    @Html.ActionLink("Apply for job", "Apply", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightgreen" })
+                </div>
+            }
         </div>
         <div class="list-item-description">
-            @if (Model.IsEditing == true)
+            @if (Model.IsEditing == true && User.CanManageJobOffer(Model.JobOfferModel))
             {
                 @Html.TextAreaFor(modelItem => Model.JobOfferModel.Description, new { @class = "description" })
             }
@@ -50,21 +59,27 @@
             <div class="list-item-primary">
                 @Html.ActionLink("Back", "Index", "JobOffer", null, new { @class = "btn button list-item-button list-item-button button-back" })
             </div>
-            @if (Model.IsEditing == true)
+            @if (Model.IsEditing == true && User.CanManageJobOffer(Model.JobOfferModel))
             {
                 <div class="list-item-secondary">
-                    <input type="submit" class = "btn button list-item-button lightgreen" value="Save changes" />
+                    <input type="submit" class="btn button list-item-button lightgreen" value="Save changes" />
                 </div>
                 <div class="list-item-tertiary">
                     @Html.ActionLink("Cancel changes", "Index", "JobOffer", null, new { @class = "btn button list-item-button" })
                     @Html.ActionLink("Delete Offer", "Delete", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightred" })
                 </div>
             }
-            else
+            else if (User.CanManageJobOffer(Model.JobOfferModel))
             {
                 <div class="list-item-tertiary">
                     @Html.ActionLink("Edit Offer", "Details", new { id = Model.JobOfferModel.Id, isEditing = true }, new { @class = "btn button list-item-button" })
                     @Html.ActionLink("Delete Offer", "Delete", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightred" })
+                </div>
+            }
+            else if (User.IsInRole(UserRole.User) && Model.JobOfferModel.Status == JobOfferStatus.Active)
+            {
+                <div class="list-item-tertiary">
+                    @Html.ActionLink("Apply for job", "Apply", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightgreen" })
                 </div>
             }
         </div>
