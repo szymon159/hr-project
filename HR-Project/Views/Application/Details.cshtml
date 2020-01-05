@@ -22,19 +22,19 @@
                     && Model.ApplicationModel.Status != ApplicationStatus.Approved 
                     && Model.ApplicationModel.Status != ApplicationStatus.Submitted)
                 {
-                    @Html.ActionLink("Send application", "Apply", new { id = Model.ApplicationModel.Id, isEditing = true }, new { @class = "btn button lightgreen" })
+                    @Html.ActionLink("Send application", "Apply", new { id = Model.ApplicationModel.Id, isEditing = true }, new { @class = "btn button list-item-button lightgreen" })
                 }
             </div>
             @if (Model.IsEditing == true && User.IsInRole(UserRole.User))
             {
                 <div class="list-item-secondary">
-                    <input type="submit" class="btn button lightgreen" value="Save changes" />
+                    <input type="submit" class="btn button list-item-button lightgreen" value="Save changes" />
                 </div>
                 <div class="list-item-tertiary">
-                    @Html.ActionLink("Cancel changes", "Index", "Application", null, new { @class = "btn button" })
+                    @Html.ActionLink("Cancel changes", "Index", "Application", null, new { @class = "btn button list-item-button" })
                     @if (Model.ApplicationModel.Status == ApplicationStatus.Submitted)
                     {
-                        @Html.ActionLink("Delete application", "Delete", new { id = Model.ApplicationModel.Id }, new { @class = "btn button lightred" })
+                        @Html.ActionLink("Delete application", "Delete", new { id = Model.ApplicationModel.Id }, new { @class = "btn button list-item-button lightred" })
                     }
                 </div>
             }
@@ -43,12 +43,22 @@
                 <div class="list-item-secondary">
                 </div>
                 <div class="list-item-tertiary">
-                    @Html.ActionLink("Edit application", "Details", new { id = Model.ApplicationModel.Id, isEditing = true }, new { @class = "btn button" })
+                    @Html.ActionLink("Edit application", "Details", new { id = Model.ApplicationModel.Id, isEditing = true }, new { @class = "btn button list-item-button" })
                     @if (Model.ApplicationModel.Status == ApplicationStatus.Submitted)
                     {
-                        @Html.ActionLink("Delete application", "Delete", new { id = Model.ApplicationModel.Id }, new { @class = "btn button lightred" })
+                        @Html.ActionLink("Delete application", "Delete", new { id = Model.ApplicationModel.Id }, new { @class = "btn button list-item-button lightred" })
                     }
                 </div>
+            }
+            else if(User.IsInRole(UserRole.HR))
+            {
+            <div class="list-item-tertiary">
+                @if (Model.ApplicationModel.Status != ApplicationStatus.Draft && Model.ApplicationModel.Status != ApplicationStatus.Withdrawn)
+                {
+                    @Html.ActionLink("Approve application", "Approve", "Application", new { id = Model.ApplicationModel.Id }, new { @class = "btn button list-item-button lightgreen" })
+                    @Html.ActionLink("Reject application", "Reject", "Application", new { id = Model.ApplicationModel.Id }, new { @class = "btn button list-item-button lightred" })
+                }
+            </div>
             }
         </div>
         <div class="list-item-description">
@@ -58,36 +68,46 @@
         </div>
         <div class="list-item list-item-footer">
             <div class="list-item-primary">
-                @Html.ActionLink("Back", "Index", "Application", null, new { @class = "btn button button-back" })
+                @Html.ActionLink("Back", "Index", "Application", null, new { @class = "btn button list-item-button button-back" })
                 @if (User.IsInRole(UserRole.User)
-                    && Model.ApplicationModel.Status != ApplicationStatus.Approved 
-                    && Model.ApplicationModel.Status != ApplicationStatus.Submitted)
+                   && Model.ApplicationModel.Status != ApplicationStatus.Approved
+                   && Model.ApplicationModel.Status != ApplicationStatus.Submitted)
                 {
-                    @Html.ActionLink("Send application", "Apply", new { id = Model.ApplicationModel.Id, isEditing = true }, new { @class = "btn button lightgreen" })
+                    @Html.ActionLink("Send application", "Apply", new { id = Model.ApplicationModel.Id, isEditing = true }, new { @class = "btn button list-item-button lightgreen" })
                 }
             </div>
             @if (Model.IsEditing == true && User.IsInRole(UserRole.User))
             {
                 <div class="list-item-secondary">
-                    <input type="submit" class="btn button lightgreen" value="Save changes" />
+                    <input type="submit" class="btn button list-item-button lightgreen" value="Save changes" />
                 </div>
                 <div class="list-item-tertiary">
-                    @Html.ActionLink("Cancel changes", "Index", "Application", null, new { @class = "btn button" })
+                    @Html.ActionLink("Cancel changes", "Index", "Application", null, new { @class = "btn button list-item-button" })
                     @if (Model.ApplicationModel.Status == ApplicationStatus.Submitted)
                     {
-                        @Html.ActionLink("Delete application", "Delete", new { id = Model.ApplicationModel.Id }, new { @class = "btn button lightred" })
+                        @Html.ActionLink("Delete application", "Delete", new { id = Model.ApplicationModel.Id }, new { @class = "btn button list-item-button lightred" })
                     }
                 </div>
             }
-            else
+            else if (User.IsInRole(UserRole.User))
             {
                 <div class="list-item-secondary">
                 </div>
                 <div class="list-item-tertiary">
-                    @Html.ActionLink("Edit application", "Details", new { id = Model.ApplicationModel.Id, isEditing = true }, new { @class = "btn button" })
+                    @Html.ActionLink("Edit application", "Details", new { id = Model.ApplicationModel.Id, isEditing = true }, new { @class = "btn button list-item-button" })
                     @if (Model.ApplicationModel.Status == ApplicationStatus.Submitted)
                     {
-                        @Html.ActionLink("Delete application", "Delete", new { id = Model.ApplicationModel.Id }, new { @class = "btn button lightred" })
+                        @Html.ActionLink("Delete application", "Delete", new { id = Model.ApplicationModel.Id }, new { @class = "btn button list-item-button lightred" })
+                    }
+                </div>
+            }
+            else if (User.IsInRole(UserRole.HR))
+            {
+                <div class="list-item-tertiary">
+                    @if (Model.ApplicationModel.Status != ApplicationStatus.Draft && Model.ApplicationModel.Status != ApplicationStatus.Withdrawn)
+                    {
+                        @Html.ActionLink("Approve application", "Approve", "Application", new { id = Model.ApplicationModel.Id }, new { @class = "btn button list-item-button lightgreen" })
+                        @Html.ActionLink("Reject application", "Reject", "Application", new { id = Model.ApplicationModel.Id }, new { @class = "btn button list-item-button lightred" })
                     }
                 </div>
             }

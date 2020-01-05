@@ -228,6 +228,10 @@ h1 {
     margin: unset;
 }
 
+.list-item-button {
+    margin: 0px 5px;
+}
+
 .joboffer-status,
 .application-status {
     text-decoration: underline;
