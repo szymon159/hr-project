@@ -8,7 +8,9 @@ using HR_Project.ExtensionMethods;
 using HR_Project.ModelConverters;
 using HR_Project.ViewModels;
 using HR_Project_Database.EntityFramework;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HR_Project.Controllers
 {
@@ -28,10 +30,15 @@ namespace HR_Project.Controllers
             return View(jobOffers);
         }
 
+        [Authorize(Roles = ("HR, Admin"))]
         public async Task<ActionResult> Delete(int id)
         {
-            var toDelete = context.JobOffer.Find(id);
-            if(toDelete != null)
+            var toDelete = context.JobOffer
+                .Include(x => x.Responsibility)
+                .ThenInclude(x => x.User)
+                .FirstOrDefault(jobOffer => jobOffer.IdJobOffer == id);           
+            
+            if(toDelete != null && User.CanManageJobOffer(toDelete))
             {
                 toDelete.Status = HR_Project_Database.Models.JobOfferStatus.Inactive;
                 await context.SaveChangesAsync();
@@ -49,22 +56,45 @@ namespace HR_Project.Controllers
             var model = new JobOfferDetailsViewModel
             {
                 JobOfferModel = baseModel,
-                IsEditing = isEditing
+                IsEditing = isEditing && User.CanManageJobOffer(baseModel)
             };
             return View(model);
         }
 
         [HttpPost]
+        [Authorize(Roles ="HR, Admin")]
         public async Task<ActionResult> Save(int id, JobOfferDetailsViewModel model)
         {
-            var toUpdate = context.JobOffer.Find(id);
-            if (toUpdate != null)
+            var toUpdate = context.JobOffer
+                .Include(x => x.Responsibility)
+                .ThenInclude(x => x.User)
+                .FirstOrDefault(jobOffer => jobOffer.IdJobOffer == id);
+            
+            if (toUpdate != null && User.CanManageJobOffer(toUpdate))
             {
                 toUpdate.Description = model.JobOfferModel.Description;
                 await context.SaveChangesAsync();
             }
 
             return RedirectToAction("Details", new { id = id, isEditing = true });
+        }
+
+        [Authorize(Roles = "User")]
+        public async Task<ActionResult> Apply(int id)
+        {
+            var jobOffer = context.JobOffer.Find(id);
+            var newApplication = new HR_Project_Database.Models.Application()
+            {
+                JobOfferId = jobOffer.IdJobOffer,
+                UserId = User.GetId(context),
+                Cvid = 1, //TODO: allow adding application without CV
+                Status = HR_Project_Database.Models.ApplicationStatus.Draft
+            };
+
+            context.Application.Add(newApplication);
+            await context.SaveChangesAsync();
+
+            return RedirectToAction("Details", "Application", new { id = newApplication.IdApplication, isEditing = true });
         }
     }
 }

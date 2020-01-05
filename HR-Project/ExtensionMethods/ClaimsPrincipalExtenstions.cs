@@ -39,6 +39,12 @@ namespace HR_Project.ExtensionMethods
             return user.Claims.FirstOrDefault(x => ClaimTypes.Email == x.Type || x.Type == "email" || x.Type == "emails")?.Value;
         }
 
+        public static int GetId(this ClaimsPrincipal user, DataContext context)
+        {
+            return context.User
+                .FirstOrDefault(dbUser => dbUser.ExternalId == user.GetExternalId()).IdUser;
+        }
+
         public static bool IsInRole(this ClaimsPrincipal user, UserRole role)
         {
             return user.IsInRole(role.ToString());
@@ -71,6 +77,18 @@ namespace HR_Project.ExtensionMethods
             }
 
             return false;
+        }
+
+        public static bool CanManageJobOffer(this ClaimsPrincipal user, JobOfferViewModel jobOffer)
+        {
+            return user.IsInRole(UserRole.Admin)
+                || (user.IsInRole(UserRole.HR) && jobOffer.ResponsibleExternalIds.Contains(user.GetExternalId()));
+        }
+
+        public static bool CanManageJobOffer(this ClaimsPrincipal user, HR_Project_Database.Models.JobOffer jobOffer)
+        {
+            return user.IsInRole(UserRole.Admin)
+                || (user.IsInRole(UserRole.HR) && jobOffer.Responsibility.Any(responsibility => responsibility.User.ExternalId == user.GetExternalId()));
         }
     }
 }

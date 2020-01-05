@@ -1,4 +1,7 @@
-﻿@model IEnumerable<JobOfferViewModel>
+﻿@using HR_Project.Enums;
+@using HR_Project.ExtensionMethods;
+
+@model IEnumerable<JobOfferViewModel>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Job Offers";
@@ -20,13 +23,23 @@
                 </div>
                 @Html.ActionLink("View Details", "Details", "JobOffer", new { id = item.Id, isEditing = false }, new { @class = "btn button list-item-button" })
             </div>
-            <div class="list-item-secondary">
-                @*TODO: When search algorythm is implemented and connected to DB add some restrictions*@
-                @Html.ActionLink("View Applications", "Index", "Application", null, new { @class = "btn button list-item-button" })
-            </div>
+            @if (User.IsInRole(UserRole.User) || User.CanManageJobOffer(item))
+            {
+                <div class="list-item-secondary">
+                    @Html.ActionLink("View Applications", "Index", "Application", null, new { @class = "btn button list-item-button" })
+                </div>
+            }
             <div class="list-item-tertiary">
-                @Html.ActionLink("Edit Offer", "Details", new { id = item.Id, isEditing = true }, new { @class = "btn button list-item-button" })
-                @Html.ActionLink("Delete Offer", "Delete", new { id = item.Id }, new { @class = "btn button list-item-button lightred" })
+                @if (User.CanManageJobOffer(item))
+                {
+                    @Html.ActionLink("Edit Offer", "Details", new { id = item.Id, isEditing = true }, new { @class = "btn button list-item-button" })
+                    @Html.ActionLink("Delete Offer", "Delete", new { id = item.Id }, new { @class = "btn button list-item-button lightred" })
+                }
+                else if(User.IsInRole(UserRole.User)
+                    && item.Status == JobOfferStatus.Active)
+                {
+                    @Html.ActionLink("Apply for job", "Apply", new { id = item.Id }, new { @class = "btn button list-item-button lightgreen" })
+                }
             </div>
         </div>
     }

@@ -14,6 +14,8 @@ namespace HR_Project.ViewModels
 
         public string Description { get; set; }
 
+        public List<string> ResponsibleExternalIds { get; set; }
+
         public JobOfferStatus Status {get; set; }
 
         public string StatusCssClass { get { return "joboffer-status-" + Status.ToString().ToLower(); } }
