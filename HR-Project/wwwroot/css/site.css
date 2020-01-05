@@ -317,6 +317,12 @@ h1 {
     margin-right: 1em;
 }
 
+.download-file-button {
+    height: 2em;
+    padding: 2px 10px;
+    margin: 15px;
+}
+
 .lightred {
     background-color: var(--light-red-button-color);
 }

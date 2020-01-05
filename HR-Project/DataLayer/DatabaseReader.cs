@@ -84,13 +84,14 @@ namespace HR_Project.DataLayer
         public static void GetApplicationDetails(this ApplicationViewModel model, DataContext context)
         {
             var application = context.Application.Include(x => x.User).FirstOrDefault(app => app.IdApplication == model.Id);
-            var attachmentCount = context.Attachment.Count(attachment => attachment.AttachmentGroupId == application.AttachmentGroupId);
+            var attachments = context.Attachment.Where(attachment => attachment.AttachmentGroupId == application.AttachmentGroupId)
+                .Select(attachment => attachment.IdAttachment.ToString() + attachment.Extension);
 
             model.FirstName = application.User.FirstName;
             model.LastName = application.User.LastName;
             model.Email = application.User.Email;
-            model.IsCvUploaded = true;
-            model.IsAttachmentsUploaded = attachmentCount > 0;
+            model.UploadedCvPath = application.Cvid.ToString() + ".pdf";
+            model.UploadedAttachmentPaths = attachments.ToList();
             model.Message = context.ApplicationMessage.Find(application.ApplicationMessageId)?.MessageContent;
         }
     }
