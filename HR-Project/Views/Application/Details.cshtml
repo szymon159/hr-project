@@ -1,5 +1,6 @@
 ﻿@model ApplicationDetailsViewModel
 @using HR_Project.Enums
+@using HR_Project.ExtensionMethods
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -17,12 +18,14 @@
                         <span class="application-status @Model.ApplicationModel.StatusCssClass">@Html.DisplayFor(modelItem => Model.ApplicationModel.Status)</span> 
                     </p>
                 </div>
-                @if (Model.ApplicationModel.Status != ApplicationStatus.Approved && Model.ApplicationModel.Status != ApplicationStatus.Submitted)
+                @if (User.IsInRole(UserRole.User) 
+                    && Model.ApplicationModel.Status != ApplicationStatus.Approved 
+                    && Model.ApplicationModel.Status != ApplicationStatus.Submitted)
                 {
                     @Html.ActionLink("Send application", "Apply", new { id = Model.ApplicationModel.Id, isEditing = true }, new { @class = "btn button lightgreen" })
                 }
             </div>
-            @if (Model.IsEditing == true)
+            @if (Model.IsEditing == true && User.IsInRole(UserRole.User))
             {
                 <div class="list-item-secondary">
                     <input type="submit" class="btn button lightgreen" value="Save changes" />
@@ -35,7 +38,7 @@
                     }
                 </div>
             }
-            else
+            else if(User.IsInRole(UserRole.User))
             {
                 <div class="list-item-secondary">
                 </div>
@@ -56,12 +59,14 @@
         <div class="list-item list-item-footer">
             <div class="list-item-primary">
                 @Html.ActionLink("Back", "Index", "Application", null, new { @class = "btn button button-back" })
-                @if (Model.ApplicationModel.Status != ApplicationStatus.Approved && Model.ApplicationModel.Status != ApplicationStatus.Submitted)
+                @if (User.IsInRole(UserRole.User)
+                    && Model.ApplicationModel.Status != ApplicationStatus.Approved 
+                    && Model.ApplicationModel.Status != ApplicationStatus.Submitted)
                 {
                     @Html.ActionLink("Send application", "Apply", new { id = Model.ApplicationModel.Id, isEditing = true }, new { @class = "btn button lightgreen" })
                 }
             </div>
-            @if (Model.IsEditing == true)
+            @if (Model.IsEditing == true && User.IsInRole(UserRole.User))
             {
                 <div class="list-item-secondary">
                     <input type="submit" class="btn button lightgreen" value="Save changes" />
