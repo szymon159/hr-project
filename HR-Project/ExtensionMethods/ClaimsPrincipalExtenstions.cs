@@ -62,7 +62,10 @@ namespace HR_Project.ExtensionMethods
         {
             if (user.IsInRole(UserRole.User) || user.IsInRole(UserRole.HR))
             {
-                var fetchedApplication = context.Application.Include(x => x.JobOffer.Responsibility).FirstOrDefault(dbApplication => dbApplication.IdApplication == application.Id);
+                var fetchedApplication = context.Application
+                    .Include(x => x.User)
+                    .Include(x => x.JobOffer.Responsibility)
+                    .FirstOrDefault(dbApplication => dbApplication.IdApplication == application.Id);
 
                 return user.HasAccessToApplication(fetchedApplication);
             }

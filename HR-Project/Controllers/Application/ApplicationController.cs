@@ -164,5 +164,45 @@ namespace HR_Project.Controllers.Application
 
             return RedirectToAction("Details", new { id = id, isEditing = true });
         }
+
+        [Authorize(Roles = ("HR"))]
+        public async Task<ActionResult> Approve(int id)
+        {
+            var toApprove = context.Application
+                .Include(x => x.User)
+                .Include(x => x.JobOffer.Responsibility)
+                .FirstOrDefault(x => x.IdApplication == id);
+            
+            if (toApprove != null
+                && User.HasAccessToApplication(toApprove)
+                && toApprove.Status != ApplicationStatus.Draft
+                && toApprove.Status != ApplicationStatus.Withdrawn)
+            {
+                toApprove.Status = ApplicationStatus.Approved;
+                await context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index", "Application");
+        }
+
+        [Authorize(Roles = ("HR"))]
+        public async Task<ActionResult> Reject(int id)
+        {
+            var toReject = context.Application
+                .Include(x => x.User)
+                .Include(x => x.JobOffer.Responsibility)
+                .FirstOrDefault(x => x.IdApplication == id);
+            
+            if (toReject != null 
+                && User.HasAccessToApplication(toReject)
+                && toReject.Status != ApplicationStatus.Draft 
+                && toReject.Status != ApplicationStatus.Withdrawn)
+            {
+                toReject.Status = ApplicationStatus.Rejected;
+                await context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index", "Application");
+        }
     }
 }
