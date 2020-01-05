@@ -2,7 +2,7 @@
 {
     public enum ApplicationStatus
     {
-        Undefined,
+        Draft,
         Submitted,
         Approved,
         Rejected,

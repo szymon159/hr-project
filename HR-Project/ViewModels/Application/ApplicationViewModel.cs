@@ -10,7 +10,7 @@ namespace HR_Project.ViewModels
 {
     public class ApplicationViewModel
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
 
         public string JobTitle { get; set; }
 

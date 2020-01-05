@@ -5,7 +5,7 @@ namespace HR_Project_Database.Models
 {
     public enum ApplicationStatus
     {
-        Undefined,
+        Draft,
         Submitted,
         Approved,
         Rejected,

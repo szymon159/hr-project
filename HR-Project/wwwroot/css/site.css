@@ -209,6 +209,7 @@ h1 {
 
 .list-item-tertiary {
     min-width: 160px;
+    text-align: center;
 }
 
 .list-item-title {
