@@ -30,7 +30,14 @@
         {
             <p class="application-property-sublabel red-text">(CV is not uploaded - add it or you will not be able to Submit/Apply)</p>
         }
-        @Html.TextBoxFor(modelItem => Model.ApplicationModel.CV, new { @type = "file", @readonly = "true", @class = "application-property-edit" })
+        @if (!Model.IsEditing)
+        {
+            @Html.TextBoxFor(modelItem => Model.ApplicationModel.CV, new { @type = "file", @disabled = "true", @class = "application-property-edit" })
+        }
+        else
+        {
+            @Html.TextBoxFor(modelItem => Model.ApplicationModel.CV, new { @type = "file", @class = "application-property-edit" })
+        }
     }
     else if (User.IsInRole(UserRole.HR)
         && Model.ApplicationModel.IsCvUploaded)
@@ -52,7 +59,14 @@
         {
             <p class="application-property-sublabel green-text">(Already uploaded, selecting new file will replace all previously uploaded)</p>
         }
-        @Html.TextBoxFor(modelItem => Model.ApplicationModel.OtherAttachments, new { @type = "file", @readonly = "true", @multiple = "true", @class = "application-property-edit" })
+        @if (!Model.IsEditing)
+        {
+            @Html.TextBoxFor(modelItem => Model.ApplicationModel.OtherAttachments, new { @type = "file", @disabled = "true", @multiple = "true", @class = "application-property-edit" })
+        }
+        else
+        {
+            @Html.TextBoxFor(modelItem => Model.ApplicationModel.OtherAttachments, new { @type = "file", @multiple = "true", @class = "application-property-edit" })
+        }    
     }
     else if (User.IsInRole(UserRole.HR))
     {
