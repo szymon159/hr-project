@@ -47,6 +47,51 @@ namespace HR_Project.Controllers
             return RedirectToAction("Index", "JobOffer");
         }
 
+        [Authorize(Roles = ("HR, Admin"))]
+        public async Task<ActionResult> Activate(int id)
+        {
+            var toActivate = context.JobOffer
+                .Include(x => x.Responsibility)
+                .ThenInclude(x => x.User)
+                .FirstOrDefault(jobOffer => jobOffer.IdJobOffer == id);
+
+            if (toActivate != null && User.CanManageJobOffer(toActivate))
+            {
+                toActivate.Status = HR_Project_Database.Models.JobOfferStatus.Active;
+                await context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index", "JobOffer");
+        }
+
+        [Authorize(Roles = ("HR, Admin"))]
+        public async Task<ActionResult> Add()
+        {
+            var newOffer = new HR_Project_Database.Models.JobOffer()
+            {
+                JobTitle = "",
+                Description = "",
+                Status = HR_Project_Database.Models.JobOfferStatus.Inactive
+            };
+
+            context.JobOffer.Add(newOffer);
+            await context.SaveChangesAsync();
+
+            if(User.IsInRole(UserRole.HR))
+            {
+                var newResponsibility = new HR_Project_Database.Models.Responsibility()
+                {
+                    JobOfferId = newOffer.IdJobOffer,
+                    UserId = User.GetId(context)
+                };
+
+                context.Responsibility.Add(newResponsibility);
+                await context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Details", new { id = newOffer.IdJobOffer, isEditing = true });
+        }
+
         public IActionResult Details(int id, bool isEditing)
         {
             var baseModel = jobOffers.Where(offer => offer.Id == id).FirstOrDefault();
@@ -72,6 +117,7 @@ namespace HR_Project.Controllers
             
             if (toUpdate != null && User.CanManageJobOffer(toUpdate))
             {
+                toUpdate.JobTitle = model.JobOfferModel.JobTitle;
                 toUpdate.Description = model.JobOfferModel.Description;
                 await context.SaveChangesAsync();
             }

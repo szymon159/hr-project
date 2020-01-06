@@ -12,6 +12,7 @@
     --red-text-color: #e61610;
     --dark-red-text-color: #660a07;
     --button-border-color: #939393;
+    --golden-button-color: #f6c354;
 }
 
 
@@ -320,6 +321,14 @@ h1 {
     height: 2em;
     padding: 2px 10px;
     margin: 15px;
+}
+
+.add-offer-button {
+    background-color: var(--golden-button-color);
+}
+
+.job-offer-textbox {
+    max-width: 100%;
 }
 
 .lightred {

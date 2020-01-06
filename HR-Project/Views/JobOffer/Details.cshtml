@@ -7,6 +7,10 @@
     ViewData["Title"] = "Details";
 }
 
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
 <body>
     <h1> Job offer details: </h1>
     @using (Html.BeginForm("Save", "JobOffer", new { id = Model.JobOfferModel.Id }, FormMethod.Post))
@@ -14,7 +18,14 @@
         <div class="list-item">
             <div class="list-item-primary">
                 <div class="list-item-title">
-                    <h2 class="list-item-title-main">@Html.DisplayFor(modelItem => Model.JobOfferModel.JobTitle) </h2>
+                    @if (Model.IsEditing == true && User.CanManageJobOffer(Model.JobOfferModel))
+                    {
+                        <h2 class="list-item-title-main">@Html.TextBoxFor(modelItem => Model.JobOfferModel.JobTitle, new { @class = "job-offer-textbox", @required = true }) </h2>
+                    }
+                    else
+                    {
+                        <h2 class="list-item-title-main">@Html.DisplayFor(modelItem => Model.JobOfferModel.JobTitle) </h2>
+                    }
                     <p class="list-item-title-details">
                         Status:
                         <span class="joboffer-status @Model.JobOfferModel.StatusCssClass">@Html.DisplayFor(modelItem => Model.JobOfferModel.Status)</span>
@@ -28,17 +39,31 @@
                 </div>
                 <div class="list-item-tertiary">
                     @Html.ActionLink("Cancel changes", "Index", "JobOffer", null, new { @class = "btn button list-item-button" })
-                    @Html.ActionLink("Delete Offer", "Delete", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightred" })
+                    @if (Model.JobOfferModel.Status == JobOfferStatus.Active)
+                    {
+                        @Html.ActionLink("Delete Offer", "Delete", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightred" })
+                    }
+                    else if (Model.JobOfferModel.Status == JobOfferStatus.Inactive)
+                    {
+                        @Html.ActionLink("Activate Offer", "Activate", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightgreen" })
+                    }
                 </div>
             }
-            else if(User.CanManageJobOffer(Model.JobOfferModel))
+            else if (User.CanManageJobOffer(Model.JobOfferModel))
             {
                 <div class="list-item-tertiary">
                     @Html.ActionLink("Edit Offer", "Details", new { id = Model.JobOfferModel.Id, isEditing = true }, new { @class = "btn button list-item-button" })
-                    @Html.ActionLink("Delete Offer", "Delete", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightred" })
+                    @if (Model.JobOfferModel.Status == JobOfferStatus.Active)
+                    {
+                        @Html.ActionLink("Delete Offer", "Delete", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightred" })
+                    }
+                    else if (Model.JobOfferModel.Status == JobOfferStatus.Inactive)
+                    {
+                        @Html.ActionLink("Activate Offer", "Activate", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightgreen" })
+                    }
                 </div>
             }
-            else if(User.IsInRole(UserRole.User) && Model.JobOfferModel.Status == JobOfferStatus.Active)
+            else if (User.IsInRole(UserRole.User) && Model.JobOfferModel.Status == JobOfferStatus.Active)
             {
                 <div class="list-item-tertiary">
                     @Html.ActionLink("Apply for job", "Apply", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightgreen" })
@@ -48,7 +73,7 @@
         <div class="list-item-description">
             @if (Model.IsEditing == true && User.CanManageJobOffer(Model.JobOfferModel))
             {
-                @Html.TextAreaFor(modelItem => Model.JobOfferModel.Description, new { @class = "description" })
+                @Html.TextAreaFor(modelItem => Model.JobOfferModel.Description, new { @class = "description", @required = "true" })
             }
             else
             {
@@ -66,14 +91,28 @@
                 </div>
                 <div class="list-item-tertiary">
                     @Html.ActionLink("Cancel changes", "Index", "JobOffer", null, new { @class = "btn button list-item-button" })
-                    @Html.ActionLink("Delete Offer", "Delete", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightred" })
+                    @if (Model.JobOfferModel.Status == JobOfferStatus.Active)
+                    {
+                        @Html.ActionLink("Delete Offer", "Delete", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightred" })
+                    }
+                    else if (Model.JobOfferModel.Status == JobOfferStatus.Inactive)
+                    {
+                        @Html.ActionLink("Activate Offer", "Activate", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightgreen" })
+                    }
                 </div>
             }
             else if (User.CanManageJobOffer(Model.JobOfferModel))
             {
                 <div class="list-item-tertiary">
                     @Html.ActionLink("Edit Offer", "Details", new { id = Model.JobOfferModel.Id, isEditing = true }, new { @class = "btn button list-item-button" })
-                    @Html.ActionLink("Delete Offer", "Delete", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightred" })
+                    @if (Model.JobOfferModel.Status == JobOfferStatus.Active)
+                    {
+                        @Html.ActionLink("Delete Offer", "Delete", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightred" })
+                    }
+                    else if (Model.JobOfferModel.Status == JobOfferStatus.Inactive)
+                    {
+                        @Html.ActionLink("Activate Offer", "Activate", new { id = Model.JobOfferModel.Id }, new { @class = "btn button list-item-button lightgreen" })
+                    }
                 </div>
             }
             else if (User.IsInRole(UserRole.User) && Model.JobOfferModel.Status == JobOfferStatus.Active)
