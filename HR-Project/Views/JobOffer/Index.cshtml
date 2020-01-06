@@ -9,6 +9,12 @@
 
 <body>
     <h1> Job offers: </h1>
+    @if(User.IsInRole(UserRole.HR) || User.IsInRole(UserRole.Admin))
+    {
+        <div class="list-item-tertiary">
+            @Html.ActionLink("Add new Job Offer", "Add", "JobOffer", null, new { @class = "btn button add-offer-button" })
+        </div>
+    }
 
     @foreach (var item in Model)
     {
