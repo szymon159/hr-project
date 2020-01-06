@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using HR_Project.DataLayer;
 using HR_Project.ExtensionMethods;
+using HR_Project.Notifications;
 using HR_Project.ViewModels;
 using HR_Project_Database.EntityFramework;
 using HR_Project_Database.Models;
@@ -13,21 +14,25 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using SendGrid;
 
 namespace HR_Project.Controllers.Application
 {
     [Authorize]
     public class ApplicationController : Controller
     {
+        private readonly IConfiguration configuration;
         private readonly DataContext context;
         private static List<ApplicationViewModel> applications;
         
-        public ApplicationController(IHttpContextAccessor contextAccessor, DataContext context)
+        public ApplicationController(IConfiguration configuration, IHttpContextAccessor contextAccessor, DataContext context)
         {
             var user = contextAccessor.HttpContext.User;
             var userExternalId = user.GetExternalId();
             var userRole = user.GetRole();
 
+            this.configuration = configuration;
             this.context = context;
             applications = DatabaseReader.GetApplications(context, userExternalId, userRole);
         }
@@ -76,7 +81,9 @@ namespace HR_Project.Controllers.Application
         [Authorize(Roles = ("User"))]
         public async Task<ActionResult> Apply(int id)
         {
-            var toUpdate = context.Application.Include(x => x.User).FirstOrDefault(x => x.IdApplication == id);
+            var toUpdate = context.Application
+                .Include(x => x.User)
+                .FirstOrDefault(x => x.IdApplication == id);
 
             if(toUpdate.CvId == null)
                 return RedirectToAction("Details", new { id = id, isEditing = true });
@@ -87,6 +94,17 @@ namespace HR_Project.Controllers.Application
                 toUpdate.Status = ApplicationStatus.Submitted;
                 await context.SaveChangesAsync();
             }
+
+            //Send notification
+            var apiKey = configuration.GetSection("SENDGRID_API_KEY").Value;
+            var client = new SendGridClient(apiKey);
+            var jobOffer = await context.JobOffer
+                .Include(x => x.Responsibility)
+                .ThenInclude(x => x.User)
+                .FirstOrDefaultAsync(offer => offer.IdJobOffer == toUpdate.JobOfferId);
+            var message = NotificationHelper.CreateNotificationForOffer(jobOffer);
+            await client.SendEmailAsync(message);
+            //
 
             return RedirectToAction("Index", "Application");
         }
