@@ -37,6 +37,8 @@ namespace HR_Project_Database.EntityFramework.Configuration
                 .HasMaxLength(50)
                 .IsUnicode(false);
 
+            builder.HasIndex(e => e.ExternalId);
+
             builder.HasData(new User[]
             {
                 new User{ IdUser = 1, FirstName="Adam", LastName="Małysz", Email="a", Role=UserRole.User, ExternalId="1"},
