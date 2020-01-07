@@ -1,0 +1,85 @@
+﻿@using HR_Project.Enums;
+@using HR_Project.ExtensionMethods;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Users";
+}
+
+<body>
+    <h1> Users: </h1>
+    <div id="users"></div>
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+    <script>
+        var uri = 'Users/get';
+
+        $(document).ready(function () {
+            $.getJSON(uri)
+                .done(function (data) {
+                    $.each(data, function (key, item) {
+                        $( formatItem(item) ).appendTo($('#users'));
+                    });
+                });
+        })
+
+        function formatItem(item) {
+            var formattedItem =
+                '<div class="list-item">\
+                    <div class="list-item-primary">\
+                        <div class="list-item-title">\
+                            <h2 class="list-item-title-main">'+item.name+'</h2>\
+                            <p class="list-item-title-details">\
+                                Role:\
+                                <span class="joboffer-status">'+formatRole(item.role)+'</span>\
+                            </p>\
+                        </div>\
+                    </div>';
+
+            if (item.role == @((int)UserRole.HR)) {
+                formattedItem = formattedItem +
+                    '<div class="list-item-secondary">\
+                        <a class="btn button list-item-button" href="Users/ManageOffers/'+item.id+'">Manage offers</a>\
+                    </div>';
+            }
+
+            formattedItem +=
+                '<div class="list-item-tertiary">';
+
+            if (item.role != '@((int)UserRole.Admin)')
+            {
+                formattedItem = formattedItem +
+                    '<a class="btn button list-item-button lightgreen" href="Users/Promote/'+item.id+'">Promote</a>';
+            }
+            if (item.role != '@((int)UserRole.User)')
+            {
+                formattedItem = formattedItem +
+                    '<a class="btn button list-item-button lightred" href="Users/Degrade/'+item.id+'">Degrade</a>';
+            }
+
+            formattedItem = formattedItem +
+                    '</div>\
+                </div>';
+
+            return formattedItem;
+        }
+
+        function formatRole(role) {
+            switch(role)
+            {
+                case 0:
+                    return 'Unlogged';
+                    break;
+                case 1:
+                    return 'User';
+                    break;
+                case 2:
+                    return 'HR';
+                    break;                
+                case 3:
+                    return 'Admin';
+                    break;
+            }
+        }
+
+    </script>
+</body>

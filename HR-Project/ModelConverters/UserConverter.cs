@@ -25,6 +25,7 @@ namespace HR_Project.ModelConverters
         {
             return new UserViewModel
             {
+                Id = databaseModel.IdUser,
                 FirstName = databaseModel.FirstName,
                 LastName = databaseModel.LastName,
                 Role = (Enums.UserRole)databaseModel.Role,

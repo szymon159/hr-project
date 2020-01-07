@@ -20,7 +20,7 @@
             else if (User.IsInRole(UserRole.Admin))
             {
                 @Html.ActionLink("Applications", "Index", "Application", null, new { @class = "topbar-button application-icon" })
-                @Html.ActionLink("Manage users", "Index", "UserManagement", null, new { @class = "topbar-button users-icon" })
+                @Html.ActionLink("Manage users", "Index", "Users", null, new { @class = "topbar-button users-icon" })
             }
         }
     </div>

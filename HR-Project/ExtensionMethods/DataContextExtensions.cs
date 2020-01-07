@@ -16,9 +16,11 @@ namespace HR_Project.ExtensionMethods
             var dbUser = context.User.FirstOrDefault(entity => entity.ExternalId == userModel.ExternalId);
             if (dbUser == null)
             {
-                context.User.Add(userModel.ToDatabaseModel());
+                dbUser = userModel.ToDatabaseModel();
+                context.User.Add(dbUser);
                 context.SaveChanges();
                 dbUserRole = userModel.Role;
+                userModel.Id = dbUser.IdUser;
                 return true;
             }
             else
