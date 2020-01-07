@@ -331,6 +331,41 @@ h1 {
     max-width: 100%;
 }
 
+.manage-offers-modal {
+    background-color: var(--light-grey-background-color);
+    border: solid;
+    border-width: 1px;
+    padding: 0.5em 2em;
+    min-width: 700px;
+    align-items: center;
+    min-height: 60px;
+    margin: 1em 6em;
+}
+
+.manage-offers-list {
+    background-color: white;
+    border: solid;
+    border-width: 1px;
+    padding: 0.5em 1em;
+    margin: 1em 0em;
+    font-size: 18px;
+}
+
+.manage-offers-list-title
+{
+    margin-bottom: 15px;
+}
+
+.manage-offers-list-item
+{
+    margin: 0.5em 0em !important;
+}
+
+.manage-offers-buttons-section {
+    text-align: right;
+    margin: 1em 0em;
+}
+
 .lightred {
     background-color: var(--light-red-button-color);
 }

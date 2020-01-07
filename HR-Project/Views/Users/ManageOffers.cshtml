@@ -1,0 +1,55 @@
+﻿@model UserViewModel
+@{
+    ViewData["Title"] = "ManageOffers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<body>
+    <h1>Offers selection</h1>
+    <div class="manage-offers-modal">
+        <h2 class="manage-offers-list-title">Select offers you want to be managed by <b>@Model.Name</b></h2>
+
+        <div id="offers" class="manage-offers-list">
+            <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+            <script src="~/lib/knockout/knockout-debug.js"></script>
+            <script src="~/lib/knockout/knockout-min.js"></script>
+            <script>
+            var managedOffers = ko.observableArray();
+            var uri = 'get/@Model.Id';
+
+            $(document).ready(function () {
+                $.getJSON(uri)
+                    .done(function (data) {
+                        $.each(data, function (key, item) {
+                            $(formatItem(item)).appendTo($('#offers'));
+                            if (item.isManaged) {
+                                managedOffers.push(item.jobOfferId.toString());
+                            }
+                        });
+                        ko.applyBindings();
+                    });
+            })
+
+            function formatItem(item) {
+                return '<input type="checkbox" class="manage-offers-list-item" value="'+item.jobOfferId+'"data-bind="checked: managedOffers">' + item.jobOfferTitle + '</input><br>';
+            }
+
+            function SendOffers(id) {
+                console.log(ko.toJSON(managedOffers));
+                $.ajax({
+                    url: "post/"+id,
+                    method: "post",
+                    contentType: 'application/json',
+                    dataType: 'application/json',
+                    data: {
+                        checkedOffers: ko.toJSON(managedOffers)
+                    }});
+            }
+            </script>
+        </div>
+        <div class="manage-offers-buttons-section">
+            <input class="btn button list-item-button lightgreen" type="submit" value="Submit" onclick="SendOffers('@Model.Id')">
+            @Html.ActionLink("Cancel", "Index", "Users", null, new { @class = "btn button list-item-button lightred" })
+        </div>
+    </div>
+</body>

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http.Internal;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using HR_Project.ModelConverters;
 
 namespace HR_Project.DataLayer
 {
@@ -94,6 +95,15 @@ namespace HR_Project.DataLayer
             model.UploadedCvPath = application.CvId == null ? null : application.CvId.ToString() + ".pdf";
             model.UploadedAttachmentPaths = attachments.ToList();
             model.Message = context.ApplicationMessage.Find(application.ApplicationMessageId)?.MessageContent;
+        }
+
+        public static List<UserViewModel> GetUsers(DataContext context)
+        {
+            var result = new List<UserViewModel>();
+
+            result.AddRange(context.User.Select(dbUser => dbUser.ToViewModel()));
+
+            return result;
         }
     }
 }
