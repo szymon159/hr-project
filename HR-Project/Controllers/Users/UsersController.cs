@@ -32,6 +32,7 @@ namespace HR_Project.Controllers.Users
             this.context = context;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
@@ -44,6 +45,7 @@ namespace HR_Project.Controllers.Users
         }
 
         [Route("Promote/{id}")]
+        [HttpGet]
         public async Task<ActionResult> Promote([FromRoute]int id)
         {
             var user = context.User
@@ -69,6 +71,7 @@ namespace HR_Project.Controllers.Users
         }
 
         [Route("Degrade/{id}")]
+        [HttpGet]
         public async Task<ActionResult> Degrade([FromRoute]int id)
         {
             var user = context.User
@@ -94,6 +97,7 @@ namespace HR_Project.Controllers.Users
         }
 
         [Route("ManageOffers/{id}")]
+        [HttpGet]
         public IActionResult ManageOffers([FromRoute] int id)
         {
             return View(context.User.Find(id).ToViewModel());

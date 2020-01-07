@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using HR_Project.ExtensionMethods;
 using System.Net;
+using Microsoft.OpenApi.Models;
 
 namespace HR_Project
 {
@@ -64,23 +65,17 @@ namespace HR_Project
                 options.Cookie.IsEssential = true;
             });
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+            });
+
             StorageContext.Setup(Configuration["StorageConnectionString"]);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            //// Following lines recreate whole DB with fake data
-            //using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            //{
-            //    var context = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
-            //    context.Database.EnsureDeleted();
-            //    context.Database.EnsureCreated();
-            //    context.InitializeFakeData();
-            //    context.SaveChanges();
-            //}
-            ////
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -94,6 +89,13 @@ namespace HR_Project
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSession();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+            });
 
             app.UseAuthentication();
 
