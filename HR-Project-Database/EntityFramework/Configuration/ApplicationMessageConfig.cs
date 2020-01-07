@@ -18,6 +18,11 @@ namespace HR_Project_Database.EntityFramework.Configuration
             builder.Property(e => e.MessageContent)
                 .IsRequired()
                 .HasColumnType("text");
+
+            builder.HasData(new ApplicationMessage[]
+            {
+                new ApplicationMessage(){ IdApplicationMessage = 1, MessageContent = "Test message content" }
+            });
         }
     }
 }

@@ -36,6 +36,12 @@ namespace HR_Project_Database.EntityFramework.Configuration
                 .IsRequired()
                 .HasMaxLength(50)
                 .IsUnicode(false);
+
+            builder.HasData(new User[]
+            {
+                new User{ IdUser = 1, FirstName="Adam", LastName="Małysz", Email="a", Role=UserRole.User, ExternalId="1"},
+                new User{ IdUser = 2, FirstName="Dawid", LastName="Kubacki", Email="s.stasiak@student.mini.pw.edu.pl", Role=UserRole.HR, ExternalId="2"}
+            });
         }
     }
 }

@@ -14,6 +14,11 @@ namespace HR_Project_Database.EntityFramework.Configuration
             builder.HasKey(e => e.IdAttachmentGroup);
 
             builder.Property(e => e.IdAttachmentGroup).HasColumnName("Id_AttachmentGroup");
+
+            builder.HasData(new AttachmentGroup[]
+            {
+                new AttachmentGroup() { IdAttachmentGroup = 1 }
+            });
         }
     }
 }

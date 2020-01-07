@@ -30,6 +30,15 @@ namespace HR_Project_Database.EntityFramework.Configuration
                 .WithMany(p => p.JobOffer)
                 .HasForeignKey(d => d.AttachmentGroupId)
                 .HasConstraintName("FK_JobOffer_AttachmentGroup");
+
+            builder.HasData(new JobOffer[]
+            {
+                new JobOffer{ IdJobOffer = 1, JobTitle = "Backend Developer", Description = "Backend Developer with id = 1 and experience in creating bugs", Status = JobOfferStatus.Active},
+                new JobOffer{ IdJobOffer = 2, JobTitle = "Frontend Developer", Description = "Frontend Developer with id = 2 and experience in creating requirements for nice-looking things which are unable to implement", Status = JobOfferStatus.Active},
+                new JobOffer{ IdJobOffer = 3, JobTitle = "Manager", Description = "Manager with id = 3 and experience in managing things (doesn't really matter what kind of things)", Status = JobOfferStatus.Active},
+                new JobOffer{ IdJobOffer = 4, JobTitle = "Teacher", Description = "Teacher with id = 4 who is ready to earn less than he should for his skills", Status = JobOfferStatus.Active},
+                new JobOffer{ IdJobOffer = 5, JobTitle = "Cook", Description = "Finally some good funny person", Status = JobOfferStatus.Active}
+            });
         }
     }
 }

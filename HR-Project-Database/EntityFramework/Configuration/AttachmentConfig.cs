@@ -24,6 +24,12 @@ namespace HR_Project_Database.EntityFramework.Configuration
                 .WithMany(p => p.Attachment)
                 .HasForeignKey(d => d.AttachmentGroupId)
                 .HasConstraintName("FK_Attachment_AttachmentGroup");
+
+            builder.HasData(new Attachment[]
+            {
+                new Attachment(){ IdAttachment = 1, Extension=".pdf", AttachmentGroupId = 1},
+                new Attachment(){ IdAttachment = 2, Extension=".pdf", AttachmentGroupId = 1}
+            });
         }
     }
 }

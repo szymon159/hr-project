@@ -26,6 +26,12 @@ namespace HR_Project_Database.EntityFramework.Configuration
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Responsibility_User");
+
+            builder.HasData(new Responsibility[]
+            {
+                new Responsibility(){ IdResponsibility = 1, JobOfferId = 2, UserId = 2 },
+                new Responsibility(){ IdResponsibility = 2, JobOfferId = 5, UserId = 2 },
+            });
         }
     }
 }
