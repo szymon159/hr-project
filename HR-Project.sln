@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29326.143
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.902
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HR-Project", "HR-Project\HR-Project.csproj", "{BF3C0D89-8EA1-4ED3-93C1-AA7BD39B285F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HR-Project-Database", "HR-Project-Database\HR-Project-Database.csproj", "{EBB12D56-982C-4901-B627-7A89AA26BF37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HR-Project-Database", "HR-Project-Database\HR-Project-Database.csproj", "{EBB12D56-982C-4901-B627-7A89AA26BF37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HR-ProjectTests", "HR-ProjectUnitTest\HR-ProjectTests.csproj", "{6D9B5F72-0E86-42A9-AD54-33DB0DA106F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{EBB12D56-982C-4901-B627-7A89AA26BF37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBB12D56-982C-4901-B627-7A89AA26BF37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBB12D56-982C-4901-B627-7A89AA26BF37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D9B5F72-0E86-42A9-AD54-33DB0DA106F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D9B5F72-0E86-42A9-AD54-33DB0DA106F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D9B5F72-0E86-42A9-AD54-33DB0DA106F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D9B5F72-0E86-42A9-AD54-33DB0DA106F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
