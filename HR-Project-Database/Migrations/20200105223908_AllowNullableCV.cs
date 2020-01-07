@@ -7,21 +7,26 @@ namespace HR_Project_Database.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<Guid>(
+            migrationBuilder.DropColumn(
+                name: "CVId",
+                table: "Application");
+
+            migrationBuilder.AddColumn<Guid>(
                 name: "CVId",
                 table: "Application",
-                nullable: true,
-                oldClrType: typeof(int));
+                nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<int>(
+            migrationBuilder.DropColumn(
+                name: "CVId",
+                table: "Application");
+
+            migrationBuilder.AddColumn<int>(
                 name: "CVId",
                 table: "Application",
-                nullable: false,
-                oldClrType: typeof(Guid),
-                oldNullable: true);
+                nullable: false);
         }
     }
 }
