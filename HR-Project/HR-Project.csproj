@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>HR_Project</RootNamespace>
     <AssemblyName>HR_Project</AssemblyName>
+    <UserSecretsId>5069b3d9-d08a-480b-9b6d-447bbd97fa17</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
