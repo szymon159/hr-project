@@ -38,10 +38,10 @@ namespace HR_Project.DataLayer
             model.Description = context.JobOffer.Where(jobOffer => jobOffer.IdJobOffer == model.Id).FirstOrDefault().Description;
         }
 
-        public static List<ApplicationViewModel> GetApplications(DataContext context, string userExternalId = null, string userRole = null, bool includeDetails = false)
+        public static List<ApplicationViewModel> GetApplications(DataContext context, string userExternalId = null, string userRole = null, bool includeDetails = false, int id = 0)
         {
             var result = new List<ApplicationViewModel>();
-            var applications = GetApplicationsForUser(context, userExternalId, userRole);
+            var applications = GetApplicationsForUser(context, userExternalId, userRole, id);
 
             foreach(var application in applications)
             {
@@ -62,25 +62,28 @@ namespace HR_Project.DataLayer
             return result;
         }
 
-        private static IEnumerable<HR_Project_Database.Models.Application> GetApplicationsForUser(DataContext context, string userExternalId, string userRole)
+        private static IEnumerable<HR_Project_Database.Models.Application> GetApplicationsForUser(DataContext context, string userExternalId, string userRole, int id = 0)
         {
+            IEnumerable<HR_Project_Database.Models.Application> result;
             if (userRole == UserRole.User.ToString())
             {
-                return context.Application
+                result = context.Application
                     .Where(application => application.User.ExternalId == userExternalId);
             }
             else if (userRole == UserRole.HR.ToString())
             {
                 // Select Applications for JobOffers which are managed by user with requested userExternalId
-                return context.Responsibility.Where(responsibility => responsibility.User.ExternalId == userExternalId)
+                result = context.Responsibility.Where(responsibility => responsibility.User.ExternalId == userExternalId)
                     .SelectMany(responsibility => responsibility.JobOffer.Application)
                     .Where(application => application.Status != HR_Project_Database.Models.ApplicationStatus.Draft);
             }
             else
             {
-                return context.Application
+                result = context.Application
                     .Where(application => application.Status != HR_Project_Database.Models.ApplicationStatus.Draft);
             }
+
+            return id == 0 ? result : result.Where(application => application.JobOfferId == id);
         }
 
         public static void GetApplicationDetails(this ApplicationViewModel model, DataContext context)

@@ -11,15 +11,15 @@
         {
             @if (User.IsInRole(UserRole.User))
             {
-                @Html.ActionLink("My applications", "Index", "Application", null, new { @class = "topbar-button application-icon" })
+                @Html.ActionLink("My applications", "Index", "Application", new { id = 0 }, new { @class = "topbar-button application-icon" })
             }
             else if (User.IsInRole(UserRole.HR))
             {
-                @Html.ActionLink("Applications", "Index", "Application", null, new { @class = "topbar-button application-icon" })
+                @Html.ActionLink("Applications", "Index", "Application", new { id = 0 }, new { @class = "topbar-button application-icon" })
             }
             else if (User.IsInRole(UserRole.Admin))
             {
-                @Html.ActionLink("Applications", "Index", "Application", null, new { @class = "topbar-button application-icon" })
+                @Html.ActionLink("Applications", "Index", "Application", new { id = 0 }, new { @class = "topbar-button application-icon" })
                 @Html.ActionLink("Manage users", "Index", "Users", null, new { @class = "topbar-button users-icon" })
             }
         }

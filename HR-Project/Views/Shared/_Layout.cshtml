@@ -19,10 +19,10 @@
 <body>
     <partial name="_CookieConsentPartial" />
     @Html.Partial("TopBar")
-    @if (ViewData["Title"] != "Error" && ViewData["Title"] != "PasswordResetSuccess")
+    @*@if (ViewData["Title"] != "Error" && ViewData["Title"] != "PasswordResetSuccess")
     {
         @Html.Partial("SearchBar", new HR_Project.ViewModels.SearchViewModel(ViewData["Title"]))
-    }
+    }*@
 
     <div class="container body-content">
         @RenderBody()

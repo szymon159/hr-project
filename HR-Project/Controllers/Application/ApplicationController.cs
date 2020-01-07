@@ -24,21 +24,19 @@ namespace HR_Project.Controllers.Application
     {
         private readonly IConfiguration configuration;
         private readonly DataContext context;
-        private static List<ApplicationViewModel> applications;
         
         public ApplicationController(IConfiguration configuration, IHttpContextAccessor contextAccessor, DataContext context)
         {
-            var user = contextAccessor.HttpContext.User;
-            var userExternalId = user.GetExternalId();
-            var userRole = user.GetRole();
-
             this.configuration = configuration;
             this.context = context;
-            applications = DatabaseReader.GetApplications(context, userExternalId, userRole);
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int id = 0)
         {
+            var userExternalId = User.GetExternalId();
+            var userRole = User.GetRole();
+            var applications = DatabaseReader.GetApplications(context, userExternalId, userRole, false, id);
+
             return View(applications);
         }
 
@@ -59,12 +57,9 @@ namespace HR_Project.Controllers.Application
         [Authorize(Roles = ("User, HR"))]
         public IActionResult Details(int id, bool isEditing)
         {
-            var baseModel = applications.FirstOrDefault(application => application.Id == id);
+            var baseModel = DatabaseReader.GetApplications(context, User.GetExternalId(), User.GetRole(), true)
+                .FirstOrDefault(application => application.Id == id);
             
-            // If no first name is loaded it means we have to fetch details
-            if (string.IsNullOrEmpty(baseModel.FirstName))
-                baseModel.GetApplicationDetails(context);
-
             if (!User.HasAccessToApplication(baseModel, context))
             {
                 return RedirectToAction("Index", "Application");

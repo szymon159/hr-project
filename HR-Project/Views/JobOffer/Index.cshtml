@@ -32,7 +32,7 @@
             @if (User.IsInRole(UserRole.User) || User.CanManageJobOffer(item))
             {
                 <div class="list-item-secondary">
-                    @Html.ActionLink("View Applications", "Index", "Application", null, new { @class = "btn button list-item-button" })
+                    @Html.ActionLink("View Applications", "Index", "Application", new { id = item.Id }, new { @class = "btn button list-item-button" })
                 </div>
             }
             <div class="list-item-tertiary">
