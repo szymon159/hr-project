@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HR-Project", "HR-Project\HR
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HR-Project-Database", "HR-Project-Database\HR-Project-Database.csproj", "{EBB12D56-982C-4901-B627-7A89AA26BF37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HR-ProjectTests", "HR-ProjectUnitTest\HR-ProjectTests.csproj", "{6D9B5F72-0E86-42A9-AD54-33DB0DA106F4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HR-ProjectTests", "HR-Project-Tests\HR-Project-Tests.csproj", "{6D9B5F72-0E86-42A9-AD54-33DB0DA106F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

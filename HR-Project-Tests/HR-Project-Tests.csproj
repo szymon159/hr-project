@@ -5,9 +5,9 @@
 
     <IsPackable>false</IsPackable>
 
-    <AssemblyName>HR-ProjectTests</AssemblyName>
+    <AssemblyName>HR-Project-Tests</AssemblyName>
 
-    <RootNamespace>HR_ProjectTests</RootNamespace>
+    <RootNamespace>HR_Project_Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
